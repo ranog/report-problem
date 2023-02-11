@@ -1,4 +1,4 @@
-FROM python:3.10.0-slim as builder
+FROM python:3.10.3-slim as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	build-essential && \
@@ -10,7 +10,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.10.0-slim
+FROM python:3.10.3-slim
 
 # Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED=1

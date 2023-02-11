@@ -1,4 +1,4 @@
-PYTHON_VERSION = 3.10.0
+PYTHON_VERSION = 3.10.3
 
 default: run
 
