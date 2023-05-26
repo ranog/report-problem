@@ -19,4 +19,4 @@ class IssueRepository:
         issues = await self.collection.where(field_path='id', op_string='==', value=issue_id).get()
         if issues:
             return issues[0].to_dict()
-        return ''
+        return {}
