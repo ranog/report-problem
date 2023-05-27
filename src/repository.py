@@ -15,7 +15,7 @@ class IssueRepository:
         await self.collection.document().set(issue)
         return issue['id']
 
-    async def get_issue(self, issue_id: str):
+    async def get(self, issue_id: str):
         issues = await self.collection.where(field_path='id', op_string='==', value=issue_id).get()
         if issues:
             return issues[0].to_dict()

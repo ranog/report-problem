@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.issue_repository import IssueRepository
+from src.repository import IssueRepository
 
 
 COLLECTION_NAME = 'testing-report-problem'

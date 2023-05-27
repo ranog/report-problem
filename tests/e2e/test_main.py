@@ -1,6 +1,6 @@
 from httpx import AsyncClient
 
-from src.issue_repository import COLLECTION_NAME
+from src.repository import COLLECTION_NAME
 
 
 async def test_it_should_ping_successfully(async_http_client: AsyncClient):

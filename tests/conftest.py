@@ -28,11 +28,12 @@ def clean_collection():
 @pytest.fixture
 def issue():
     return {
-        'user_id': 1,
-        'email': 'test@email.com',
+        'created_by': 'user id that opened the ticket',
+        'email': 'user@email.com',
         'description': 'dummy description',
         'category': 'dummy category',
-        'priority': 'high',
+        'priority': 'high - medium - low',
         'created_at': datetime.utcnow().strftime(TIMESTAMP_FORMAT),
-        'status': 1,
+        'status': 'TO DO - IN PROGRESS - DONE',
+        'owner': 'specific@engineer.com',
     }
