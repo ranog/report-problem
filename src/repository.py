@@ -1,5 +1,3 @@
-import uuid
-
 from google.cloud import firestore
 
 
@@ -11,12 +9,12 @@ class IssueRepository:
         self.collection = firestore.AsyncClient().collection(COLLECTION_NAME)
 
     async def add(self, issue: dict):
-        issue['id'] = str(uuid.uuid4())
-        await self.collection.document().set(issue)
-        return issue['id']
+        doc_ref = self.collection.document()
+        await doc_ref.set(issue)
+        return doc_ref.id
 
     async def get(self, issue_id: str):
-        issues = await self.collection.where(field_path='id', op_string='==', value=issue_id).get()
-        if issues:
-            return issues[0].to_dict()
+        issues = await self.collection.document(issue_id).get()
+        if issues.exists:
+            return issues.to_dict()
         return {}

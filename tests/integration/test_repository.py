@@ -20,7 +20,7 @@ async def test_it_should_add_two_new_issues_but_ids_should_be_different(clean_co
         value=issue['created_by'],
     ).get()
     assert len(issues) == 2
-    assert issues[0].to_dict()['id'] != issues[1].to_dict()['id']
+    assert issues[0].id != issues[1].id
 
 
 async def test_it_should_return_an_empty_dict_when_the_issue_id_does_not_exist_in_the_repository(clean_collection):
