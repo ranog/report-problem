@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class DefectCategory(str, Enum):
@@ -22,12 +22,12 @@ class Priority(Enum):
     LOW = 'low'
 
 
-class CreateNewIssue(BaseModel):
+class NewIssue(BaseModel):
     created_by: str
     email: EmailStr
     description: str
     category: DefectCategory
     priority: Priority
-    created_at: datetime
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
     owner: EmailStr

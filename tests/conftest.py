@@ -1,13 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from google.cloud import firestore
 from httpx import AsyncClient
 
+from src.factory import build_create_new_issue
 from src.main import app
-
-
-TIMESTAMP_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+from src.model import DefectCategory, Priority, Status
 
 
 @pytest.fixture
@@ -26,14 +25,16 @@ def clean_collection():
 
 
 @pytest.fixture
-def issue():
-    return {
-        'created_by': 'user id that opened the ticket',
-        'email': 'user@email.com',
-        'description': 'dummy description',
-        'category': 'dummy category',
-        'priority': 'high - medium - low',
-        'created_at': datetime.utcnow().strftime(TIMESTAMP_FORMAT),
-        'status': 'TO DO - IN PROGRESS - DONE',
-        'owner': 'specific@engineer.com',
-    }
+async def new_issue():
+    return build_create_new_issue(
+        {
+            'created_by': '111111111',
+            'email': 'user@email.com',
+            'description': 'dummy description',
+            'category': DefectCategory.NOTEBOOK.value,
+            'priority': Priority.HIGH.value,
+            'created_at': str(datetime.now(timezone.utc)),
+            'status': Status.TO_DO.value,
+            'owner': 'specific@engineer.com',
+        }
+    )

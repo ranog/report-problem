@@ -1,23 +1,27 @@
 from src.repository import COLLECTION_NAME, IssueRepository
 
 
-async def test_it_should_persist_in_the_repository(clean_collection, issue):
+async def test_it_should_persist_in_the_repository(clean_collection, new_issue):
     await clean_collection(COLLECTION_NAME)
     issue_repository = IssueRepository()
-    issue_id = await issue_repository.add(issue)
+    issue_id = await issue_repository.add(new_issue)
     response = await issue_repository.get(issue_id)
-    assert response == issue
+    new_issue_doc = new_issue.dict()
+    new_issue_doc['category'] = new_issue_doc['category'].value
+    new_issue_doc['priority'] = new_issue_doc['priority'].value
+    new_issue_doc['status'] = new_issue_doc['status'].value
+    assert response == new_issue_doc
 
 
-async def test_it_should_add_two_new_issues_but_ids_should_be_different(clean_collection, issue):
+async def test_it_should_add_two_new_issues_but_ids_should_be_different(clean_collection, new_issue):
     await clean_collection(COLLECTION_NAME)
     issue_repository = IssueRepository()
-    await issue_repository.add(issue)
-    await issue_repository.add(issue)
+    await issue_repository.add(new_issue)
+    await issue_repository.add(new_issue)
     issues = await issue_repository.collection.where(
         field_path='created_by',
         op_string='==',
-        value=issue['created_by'],
+        value=new_issue.created_by,
     ).get()
     assert len(issues) == 2
     assert issues[0].id != issues[1].id

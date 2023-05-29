@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.repository import IssueRepository
+from src.service import create_new_issue
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -18,6 +18,6 @@ async def root():
 @app.post('/v1/report-new-issue/')
 async def report_new_issue(json: dict):
     if json:
-        issue_id = await IssueRepository().add(json)
+        issue_id = await create_new_issue(data=json)
         return JSONResponse(issue_id, status_code=200)
     return JSONResponse('New issue cannot be empty', status_code=400)
