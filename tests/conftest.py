@@ -4,7 +4,7 @@ import pytest
 from google.cloud import firestore
 from httpx import AsyncClient
 
-from src.factory import build_create_new_issue
+from src.factory import build_new_issue
 from src.main import app
 from src.model import DefectCategory, Priority, Status
 
@@ -26,7 +26,7 @@ def clean_collection():
 
 @pytest.fixture
 async def new_issue():
-    return build_create_new_issue(
+    return build_new_issue(
         {
             'created_by': '111111111',
             'email': 'user@email.com',
