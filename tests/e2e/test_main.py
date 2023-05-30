@@ -29,7 +29,7 @@ async def test_it_should_return_400_when_category_is_not_valid(
     response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'category': (
-            'value is not a valid enumeration member; permitted: '
+            f"'{category_value}': value is not a valid enumeration member; permitted: "
             f"'{DefectCategory.NOTEBOOK.value}', '{DefectCategory.SOFTWARE.value}', '{DefectCategory.PERIPHERAL.value}'"
         )
     }
@@ -49,7 +49,7 @@ async def test_it_should_return_400_when_priority_is_not_valid(
     response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'priority': (
-            'value is not a valid enumeration member; permitted: '
+            f"'{priority_value}': value is not a valid enumeration member; permitted: "
             f"'{Priority.HIGH.value}', '{Priority.MEDIUM.value}', '{Priority.LOW.value}'"
         )
     }
@@ -69,7 +69,7 @@ async def test_it_should_return_400_when_status_is_not_valid(
     response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'status': (
-            'value is not a valid enumeration member; permitted: '
+            f"'{status_value}': value is not a valid enumeration member; permitted: "
             f"'{Status.TO_DO.value}', '{Status.IN_PROGRESS.value}', '{Status.DONE.value}'"
         )
     }
@@ -85,13 +85,13 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
     response = await async_http_client.post('/v1/report-new-issue/', json={})
     assert response.status_code == 400
     expected_msg = {
-        'username': 'field required',
-        'user_id': 'field required',
-        'user_email': 'field required',
-        'description': 'field required',
-        'category': 'field required',
-        'priority': 'field required',
-        'status': 'field required',
-        'owner_email': 'field required',
+        'username': "'': field required",
+        'user_id': "'': field required",
+        'user_email': "'': field required",
+        'description': "'': field required",
+        'category': "'': field required",
+        'priority': "'': field required",
+        'status': "'': field required",
+        'owner_email': "'': field required",
     }
     assert response.json() == expected_msg
