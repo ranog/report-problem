@@ -19,9 +19,9 @@ async def test_it_should_add_two_new_issues_but_ids_should_be_different(clean_co
     await issue_repository.add(new_issue)
     await issue_repository.add(new_issue)
     issues = await issue_repository.collection.where(
-        field_path='created_by',
+        field_path='user_id',
         op_string='==',
-        value=new_issue.created_by,
+        value=new_issue.user_id,
     ).get()
     assert len(issues) == 2
     assert issues[0].id != issues[1].id

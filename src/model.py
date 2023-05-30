@@ -24,11 +24,11 @@ class Priority(Enum):
 
 class NewIssue(BaseModel):
     username: str
-    created_by: str
-    email: EmailStr
+    user_id: str
+    user_email: EmailStr
     description: str
     category: DefectCategory
     priority: Priority
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
-    owner: EmailStr
+    owner_email: EmailStr

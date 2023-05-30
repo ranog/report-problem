@@ -86,12 +86,12 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
     assert response.status_code == 400
     expected_msg = {
         'username': 'field required',
-        'created_by': 'field required',
-        'email': 'field required',
+        'user_id': 'field required',
+        'user_email': 'field required',
         'description': 'field required',
         'category': 'field required',
         'priority': 'field required',
         'status': 'field required',
-        'owner': 'field required',
+        'owner_email': 'field required',
     }
     assert response.json() == expected_msg

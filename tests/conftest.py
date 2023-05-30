@@ -28,14 +28,14 @@ def clean_collection():
 def payload():
     return {
         'username': 'dummy name',
-        'created_by': '111111111',
-        'email': 'user@email.com',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
         'description': 'dummy description',
         'category': DefectCategory.NOTEBOOK.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner': 'specific@engineer.com',
+        'owner_email': 'specific@engineer.com',
     }
 
 
