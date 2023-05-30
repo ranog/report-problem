@@ -9,6 +9,7 @@ from src.model import DefectCategory, NewIssue, Priority, Status
 def test_category_field_must_not_accept_values_that_are_not_listed_in_the_defect_category(category_value):
     with pytest.raises(ValueError) as error:
         NewIssue(
+            username='dummy name',
             category=category_value,
             created_by='1',
             email='user@email.com',
@@ -26,6 +27,7 @@ def test_category_field_must_not_accept_values_that_are_not_listed_in_the_defect
 def test_priority_field_must_not_accept_values_that_are_not_listed_in_the_priority(priority_value):
     with pytest.raises(ValueError) as error:
         NewIssue(
+            username='dummy name',
             category=DefectCategory.SOFTWARE,
             created_by='1',
             email='user@email.com',
@@ -43,6 +45,7 @@ def test_priority_field_must_not_accept_values_that_are_not_listed_in_the_priori
 def test_status_field_must_not_accept_values_that_are_not_listed_in_the_status(status_value):
     with pytest.raises(ValueError) as error:
         NewIssue(
+            username='dummy name',
             category=DefectCategory.PERIPHERAL,
             created_by='1',
             email='user@email.com',
@@ -58,6 +61,7 @@ def test_status_field_must_not_accept_values_that_are_not_listed_in_the_status(s
 
 def test_email_field_should_have_a_valid_form():
     issue = NewIssue(
+        username='dummy name',
         category=DefectCategory.NOTEBOOK,
         created_by='1',
         email='dummy@email.c',
@@ -74,6 +78,7 @@ def test_email_field_should_have_a_valid_form():
 def test_email_field_must_have_an_email_in_valid_format(email_value):
     with pytest.raises(ValueError) as error:
         NewIssue(
+            username='dummy name',
             category=DefectCategory.PERIPHERAL,
             created_by='1',
             email=email_value,
@@ -89,6 +94,7 @@ def test_email_field_must_have_an_email_in_valid_format(email_value):
 
 def test_owner_field_should_be_a_valid_form_of_email():
     issue = NewIssue(
+        username='dummy name',
         category=DefectCategory.NOTEBOOK,
         created_by='1',
         email='dummy@email.c',
@@ -105,6 +111,7 @@ def test_owner_field_should_be_a_valid_form_of_email():
 def test_test_owner_field_must_have_an_email_in_valid_format(owner_email_value):
     with pytest.raises(ValueError) as error:
         NewIssue(
+            username='dummy name',
             category=DefectCategory.PERIPHERAL,
             created_by='1',
             email='dummy@email.c',

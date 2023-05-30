@@ -27,6 +27,7 @@ def clean_collection():
 @pytest.fixture
 def payload():
     return {
+        'username': 'dummy name',
         'created_by': '111111111',
         'email': 'user@email.com',
         'description': 'dummy description',

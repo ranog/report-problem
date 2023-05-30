@@ -85,6 +85,7 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
     response = await async_http_client.post('/v1/report-new-issue/', json={})
     assert response.status_code == 400
     expected_msg = {
+        'username': 'field required',
         'created_by': 'field required',
         'email': 'field required',
         'description': 'field required',

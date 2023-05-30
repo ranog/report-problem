@@ -23,6 +23,7 @@ class Priority(Enum):
 
 
 class NewIssue(BaseModel):
+    username: str
     created_by: str
     email: EmailStr
     description: str
