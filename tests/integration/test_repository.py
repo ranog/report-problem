@@ -10,6 +10,7 @@ async def test_it_should_persist_in_the_repository(clean_collection, new_issue):
     new_issue_doc['category'] = new_issue_doc['category'].value
     new_issue_doc['priority'] = new_issue_doc['priority'].value
     new_issue_doc['status'] = new_issue_doc['status'].value
+    new_issue_doc['created_at'] = str(new_issue_doc['created_at'])
     assert response == new_issue_doc
 
 

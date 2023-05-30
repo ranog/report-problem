@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.service import create_new_issue
+from src.service import create_new_issue, get_issue
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -21,3 +21,8 @@ async def report_new_issue(json: dict):
     if isinstance(issue, str):
         return JSONResponse(issue, status_code=200)
     return JSONResponse(issue, status_code=400)
+
+
+@app.get('/v1/{issue_id}/')
+async def get_problem_by_id(issue_id: str):
+    return await get_issue(issue_id)

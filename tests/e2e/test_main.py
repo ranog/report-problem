@@ -95,3 +95,28 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
         'owner_email': "'': field required",
     }
     assert response.json() == expected_msg
+
+
+async def test_it_should_successfully_get_issue(payload, clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    issue_info = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    response = await async_http_client.get(f'/v1/{issue_info.json()}/')
+    assert response.status_code == 200
+    assert response.json() == payload
+
+
+async def test_it_should_return_status_404_when_not_providing_an_id(clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    response = await async_http_client.get('/v1//')
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'Not Found'}
+
+
+async def test_it_should_return_an_empty_dict_when_passing_the_issue_id_which_does_not_exist(
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    response = await async_http_client.get('/v1/dummy_id/')
+    assert response.status_code == 200
+    assert response.json() == {}

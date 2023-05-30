@@ -25,5 +25,7 @@ class IssueRepository:
     async def get(self, issue_id: str):
         issue = await self.collection.document(issue_id).get()
         if issue.exists:
-            return issue.to_dict()
+            issue_doc = issue.to_dict()
+            issue_doc['created_at'] = str(issue_doc['created_at'])
+            return issue_doc
         return {}
