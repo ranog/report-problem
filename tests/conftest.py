@@ -25,16 +25,19 @@ def clean_collection():
 
 
 @pytest.fixture
-async def new_issue():
-    return build_new_issue(
-        {
-            'created_by': '111111111',
-            'email': 'user@email.com',
-            'description': 'dummy description',
-            'category': DefectCategory.NOTEBOOK.value,
-            'priority': Priority.HIGH.value,
-            'created_at': str(datetime.now(timezone.utc)),
-            'status': Status.TO_DO.value,
-            'owner': 'specific@engineer.com',
-        }
-    )
+def payload():
+    return {
+        'created_by': '111111111',
+        'email': 'user@email.com',
+        'description': 'dummy description',
+        'category': DefectCategory.NOTEBOOK.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner': 'specific@engineer.com',
+    }
+
+
+@pytest.fixture
+def new_issue(payload):
+    return build_new_issue(payload)
