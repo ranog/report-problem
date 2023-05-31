@@ -3,8 +3,9 @@ from datetime import datetime, timezone
 import pytest
 from httpx import AsyncClient
 
+from src.factory import build_issue
 from src.model import DefectCategory, Priority, Status
-from src.repository import COLLECTION_NAME
+from src.repository import COLLECTION_NAME, IssueRepository
 
 
 async def test_it_should_ping_successfully(async_http_client: AsyncClient):
@@ -17,7 +18,7 @@ async def test_it_should_ping_successfully(async_http_client: AsyncClient):
 async def test_it_should_successfully_create_a_new_issue(payload, clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    response = await async_http_client.post('/v1/report-issue/', json=payload)
 
     assert response.status_code == 200
 
@@ -38,7 +39,7 @@ async def test_it_should_return_400_when_category_is_not_valid(
         )
     }
 
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    response = await async_http_client.post('/v1/report-issue/', json=payload)
 
     assert response.status_code == 400
     assert response.json() == expected_msg
@@ -60,7 +61,7 @@ async def test_it_should_return_400_when_priority_is_not_valid(
         )
     }
 
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    response = await async_http_client.post('/v1/report-issue/', json=payload)
 
     assert response.status_code == 400
     assert response.json() == expected_msg
@@ -82,7 +83,7 @@ async def test_it_should_return_400_when_status_is_not_valid(
         )
     }
 
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    response = await async_http_client.post('/v1/report-issue/', json=payload)
 
     assert response.status_code == 400
     assert response.json() == expected_msg
@@ -104,7 +105,7 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
         'owner_email': "'': field required",
     }
 
-    response = await async_http_client.post('/v1/report-new-issue/', json={})
+    response = await async_http_client.post('/v1/report-issue/', json={})
 
     assert response.status_code == 400
     assert response.json() == expected_msg
@@ -112,7 +113,7 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
 
 async def test_it_should_successfully_get_issue(payload, clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
-    issue_info = await async_http_client.post('/v1/report-new-issue/', json=payload)
+    issue_info = await async_http_client.post('/v1/report-issue/', json=payload)
 
     response = await async_http_client.get(f'/v1/{issue_info.json()}/')
 
@@ -145,14 +146,14 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
     await clean_collection(COLLECTION_NAME)
     payload_2 = {
         'username': 'dummy name',
-        'user_id': '111111111',
-        'user_email': 'user@email.com',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
         'description': 'dummy description',
         'category': DefectCategory.NOTEBOOK.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'owner_email': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -165,9 +166,10 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'status': Status.TO_DO.value,
         'owner_email': 'specific@engineer.com',
     }
-    await async_http_client.post('/v1/report-new-issue/', json=payload)
-    await async_http_client.post('/v1/report-new-issue/', json=payload_2)
-    await async_http_client.post('/v1/report-new-issue/', json=payload_3)
+    reposiroty = IssueRepository()
+    await reposiroty.add(build_issue(payload))
+    await reposiroty.add(build_issue(payload_2))
+    await reposiroty.add(build_issue(payload_3))
 
     response = await async_http_client.get(f'/v1/issue-list/{DefectCategory.NOTEBOOK.value}/{Priority.HIGH.value}/')
 

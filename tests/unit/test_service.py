@@ -1,6 +1,6 @@
 from src.model import NewIssue
 from src.repository import IssueRepository
-from src.service import create_new_issue
+from src.service import create_issue
 
 
 class FakeIssueRepository(IssueRepository):
@@ -19,7 +19,7 @@ class FakeIssueRepository(IssueRepository):
 
 async def test_it_should_persist_the_new_issue(new_issue):
     repository = FakeIssueRepository()
-    await create_new_issue(vars(new_issue), repository)
+    await create_issue(vars(new_issue), repository)
     assert repository.logs[0].user_id == new_issue.user_id
     assert repository.logs[0].user_email == new_issue.user_email
     assert repository.logs[0].description == new_issue.description

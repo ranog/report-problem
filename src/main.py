@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.service import create_new_issue, get_issue, get_issue_list
+from src.service import create_issue, get_issue, get_issue_list
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -15,9 +15,9 @@ async def root():
     return {'ping': 'pong'}
 
 
-@app.post('/v1/report-new-issue/')
-async def report_new_issue(json: dict):
-    issue = await create_new_issue(json)
+@app.post('/v1/report-issue/')
+async def report_issue(json: dict):
+    issue = await create_issue(json)
     if isinstance(issue, str):
         return JSONResponse(issue, status_code=200)
     return JSONResponse(issue, status_code=400)

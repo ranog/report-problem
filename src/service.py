@@ -1,12 +1,12 @@
 from pydantic import ValidationError
 
-from src.factory import build_new_issue
+from src.factory import build_issue
 from src.repository import IssueRepository
 
 
-async def create_new_issue(data: dict, repository: IssueRepository = None):
+async def create_issue(data: dict, repository: IssueRepository = None):
     try:
-        new_issue = build_new_issue(data)
+        new_issue = build_issue(data)
     except ValidationError as error:
         messages = {}
         for error_doc in error.errors():

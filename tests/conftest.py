@@ -4,7 +4,7 @@ import pytest
 from google.cloud import firestore
 from httpx import AsyncClient
 
-from src.factory import build_new_issue
+from src.factory import build_issue
 from src.main import app
 from src.model import DefectCategory, Priority, Status
 
@@ -41,4 +41,4 @@ def payload():
 
 @pytest.fixture
 def new_issue(payload):
-    return build_new_issue(payload)
+    return build_issue(payload)
