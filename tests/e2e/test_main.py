@@ -3,9 +3,8 @@ from datetime import datetime, timezone
 import pytest
 from httpx import AsyncClient
 
-from src.factory import build_issue
 from src.model import DefectCategory, Priority, Status
-from src.repository import COLLECTION_NAME, IssueRepository
+from src.repository import COLLECTION_NAME
 
 
 async def test_it_should_ping_successfully(async_http_client: AsyncClient):
@@ -149,9 +148,9 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.NOTEBOOK.value,
-        'priority': Priority.HIGH.value,
-        'created_at': str(datetime.now(timezone.utc)),
+        'category': DefectCategory.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
         'owner_email': 'other_specific@engineer.com',
     }
@@ -161,17 +160,53 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'user_email': 'user@email.com',
         'description': 'dummy description',
         'category': DefectCategory.SOFTWARE.value,
-        'priority': Priority.LOW.value,
+        'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
         'owner_email': 'specific@engineer.com',
     }
-    reposiroty = IssueRepository()
-    await reposiroty.add(build_issue(payload))
-    await reposiroty.add(build_issue(payload_2))
-    await reposiroty.add(build_issue(payload_3))
+    await async_http_client.post('/v1/report-issue/', json=payload)
+    await async_http_client.post('/v1/report-issue/', json=payload_2)
+    await async_http_client.post('/v1/report-issue/', json=payload_3)
 
-    response = await async_http_client.get(f'/v1/issue-list/{DefectCategory.NOTEBOOK.value}/{Priority.HIGH.value}/')
+    response = await async_http_client.get(f'/v1/issue-list/{DefectCategory.SOFTWARE.value}/{Priority.MEDIUM.value}/')
 
     assert response.status_code == 200
-    assert response.json() == [payload, payload_2]
+    assert len(response.json()) == 2
+    assert response.json() == [payload_2, payload_3]
+
+
+@pytest.mark.parametrize(
+    'category_value, priority_value',
+    [
+        ('dummy value for category', Priority.MEDIUM.value),
+        (DefectCategory.NOTEBOOK, 'dummy value for priority'),
+    ],
+)
+async def test_it_should_return_an_empty_list_when_providing_incorrect_parameters(
+    category_value,
+    priority_value,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+
+    response = await async_http_client.get(f'/v1/issue-list/{category_value}/{priority_value}/')
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+@pytest.mark.parametrize('category_value, priority_value', [('', Priority.MEDIUM.value), (DefectCategory.NOTEBOOK, '')])
+async def test_should_return_status_404_when_providing_empty_parameters(
+    category_value,
+    priority_value,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+
+    response = await async_http_client.get(f'/v1/issue-list/{category_value}/{priority_value}/')
+
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'Not Found'}

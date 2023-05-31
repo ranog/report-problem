@@ -34,5 +34,7 @@ class IssueRepository:
         return {}
 
     async def filter(self, category: str, priority: str):
-        docs = self.collection.where('category', '==', category).where('priority', '==', priority).stream()
-        return [self._convert_datetime(doc) async for doc in docs]
+        query = self.collection.where('category', '==', category).where('priority', '==', priority).stream()
+        docs = [doc async for doc in query]
+        sorted_docs = sorted(docs, key=lambda doc: doc.get('created_at'))
+        return [self._convert_datetime(doc) for doc in sorted_docs]

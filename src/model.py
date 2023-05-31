@@ -7,7 +7,7 @@ from pydantic import BaseModel, EmailStr, Field
 class DefectCategory(str, Enum):
     NOTEBOOK = 'Defeito no notebook'
     SOFTWARE = 'Problema com software'
-    PERIPHERAL = 'Defeito em um periférico (Mouse, Teclado, Monitor, etc)'
+    PERIPHERAL = 'Defeito em um periferico (Mouse, Teclado, Monitor, etc)'
 
 
 class Status(str, Enum):

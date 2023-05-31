@@ -1,3 +1,9 @@
+from datetime import datetime, timezone
+
+import pytest
+
+from src.factory import build_issue
+from src.model import DefectCategory, Priority, Status
 from src.repository import COLLECTION_NAME, IssueRepository
 
 
@@ -32,3 +38,59 @@ async def test_it_should_return_an_empty_dict_when_the_issue_id_does_not_exist_i
     await clean_collection(COLLECTION_NAME)
     issue = await IssueRepository().get('dummy_issue_id')
     assert issue == {}
+
+
+async def test_it_should_return_list_of_issues_when_given_correct_parameters(payload, clean_collection):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': DefectCategory.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': DefectCategory.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    repository = IssueRepository()
+    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_2))
+    await repository.add(build_issue(payload_3))
+
+    issues = await repository.filter(category=DefectCategory.SOFTWARE.value, priority=Priority.MEDIUM.value)
+
+    assert len(issues) == 2
+    assert issues == [payload_2, payload_3]
+
+
+@pytest.mark.parametrize(
+    'category_value, priority_value',
+    [
+        ('', Priority.MEDIUM.value),
+        ('dummy value for category', Priority.MEDIUM.value),
+        (DefectCategory.NOTEBOOK, ''),
+        (DefectCategory.NOTEBOOK, 'dummy value for priority'),
+    ],
+)
+async def test_it_should_return_an_empty_list_when_not_given_the_correct_parameters(
+    category_value,
+    priority_value,
+    clean_collection,
+):
+    await clean_collection(COLLECTION_NAME)
+    repository = IssueRepository()
+    issues = await repository.filter(category=category_value, priority=priority_value)
+
+    assert issues == []
