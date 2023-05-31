@@ -10,22 +10,29 @@ class IssueRepository:
     def __init__(self):
         self.collection = firestore.AsyncClient().collection(COLLECTION_NAME)
 
-    def _extract_enum_value(self, issue_doc):
+    def _extract_enum_value(self, issue):
+        issue_doc = issue.dict()
         issue_doc['category'] = issue_doc['category'].value
         issue_doc['priority'] = issue_doc['priority'].value
         issue_doc['status'] = issue_doc['status'].value
+        return issue_doc
+
+    def _convert_datetime(self, issue):
+        issue_doc = issue.to_dict()
+        issue_doc['created_at'] = str(issue_doc['created_at'])
+        return issue_doc
 
     async def add(self, issue: NewIssue):
         doc_ref = self.collection.document()
-        issue_doc = issue.dict()
-        self._extract_enum_value(issue_doc)
-        await doc_ref.set(issue_doc)
+        await doc_ref.set(self._extract_enum_value(issue))
         return doc_ref.id
 
     async def get(self, issue_id: str):
         issue = await self.collection.document(issue_id).get()
         if issue.exists:
-            issue_doc = issue.to_dict()
-            issue_doc['created_at'] = str(issue_doc['created_at'])
-            return issue_doc
+            return self._convert_datetime(issue)
         return {}
+
+    async def filter(self, category: str, priority: str):
+        docs = self.collection.where('category', '==', category).where('priority', '==', priority).stream()
+        return [self._convert_datetime(doc) async for doc in docs]

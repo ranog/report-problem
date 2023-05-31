@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 from httpx import AsyncClient
 
@@ -7,13 +9,16 @@ from src.repository import COLLECTION_NAME
 
 async def test_it_should_ping_successfully(async_http_client: AsyncClient):
     response = await async_http_client.get('/v1/ping/')
+
     assert response.status_code == 200
     assert response.json() == {'ping': 'pong'}
 
 
 async def test_it_should_successfully_create_a_new_issue(payload, clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
+
     response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+
     assert response.status_code == 200
 
 
@@ -26,13 +31,15 @@ async def test_it_should_return_400_when_category_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['category'] = category_value
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'category': (
             f"'{category_value}': value is not a valid enumeration member; permitted: "
             f"'{DefectCategory.NOTEBOOK.value}', '{DefectCategory.SOFTWARE.value}', '{DefectCategory.PERIPHERAL.value}'"
         )
     }
+
+    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+
     assert response.status_code == 400
     assert response.json() == expected_msg
 
@@ -46,13 +53,15 @@ async def test_it_should_return_400_when_priority_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['priority'] = priority_value
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'priority': (
             f"'{priority_value}': value is not a valid enumeration member; permitted: "
             f"'{Priority.HIGH.value}', '{Priority.MEDIUM.value}', '{Priority.LOW.value}'"
         )
     }
+
+    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+
     assert response.status_code == 400
     assert response.json() == expected_msg
 
@@ -66,13 +75,15 @@ async def test_it_should_return_400_when_status_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['status'] = status_value
-    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
     expected_msg = {
         'status': (
             f"'{status_value}': value is not a valid enumeration member; permitted: "
             f"'{Status.TO_DO.value}', '{Status.IN_PROGRESS.value}', '{Status.DONE.value}'"
         )
     }
+
+    response = await async_http_client.post('/v1/report-new-issue/', json=payload)
+
     assert response.status_code == 400
     assert response.json() == expected_msg
 
@@ -82,8 +93,6 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-    response = await async_http_client.post('/v1/report-new-issue/', json={})
-    assert response.status_code == 400
     expected_msg = {
         'username': "'': field required",
         'user_id': "'': field required",
@@ -94,20 +103,28 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
         'status': "'': field required",
         'owner_email': "'': field required",
     }
+
+    response = await async_http_client.post('/v1/report-new-issue/', json={})
+
+    assert response.status_code == 400
     assert response.json() == expected_msg
 
 
 async def test_it_should_successfully_get_issue(payload, clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
     issue_info = await async_http_client.post('/v1/report-new-issue/', json=payload)
+
     response = await async_http_client.get(f'/v1/{issue_info.json()}/')
+
     assert response.status_code == 200
     assert response.json() == payload
 
 
 async def test_it_should_return_status_404_when_not_providing_an_id(clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
+
     response = await async_http_client.get('/v1//')
+
     assert response.status_code == 404
     assert response.json() == {'detail': 'Not Found'}
 
@@ -117,6 +134,42 @@ async def test_it_should_return_an_empty_dict_when_passing_the_issue_id_which_do
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
+
     response = await async_http_client.get('/v1/dummy_id/')
+
     assert response.status_code == 200
     assert response.json() == {}
+
+
+async def test_it_should_successfully_issue_list(payload, clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': DefectCategory.NOTEBOOK.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': DefectCategory.SOFTWARE.value,
+        'priority': Priority.LOW.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    await async_http_client.post('/v1/report-new-issue/', json=payload)
+    await async_http_client.post('/v1/report-new-issue/', json=payload_2)
+    await async_http_client.post('/v1/report-new-issue/', json=payload_3)
+
+    response = await async_http_client.get(f'/v1/issue-list/{DefectCategory.NOTEBOOK.value}/{Priority.HIGH.value}/')
+
+    assert response.status_code == 200
+    assert response.json() == [payload, payload_2]
