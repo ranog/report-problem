@@ -179,8 +179,9 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
 @pytest.mark.parametrize(
     'category_value, priority_value',
     [
+        (DefectCategory.NOTEBOOK.value, 'dummy value for priority'),
         ('dummy value for category', Priority.MEDIUM.value),
-        (DefectCategory.NOTEBOOK, 'dummy value for priority'),
+        ('dummy value for category', 'dummy value for priority'),
     ],
 )
 async def test_it_should_return_an_empty_list_when_providing_incorrect_parameters(
@@ -197,7 +198,14 @@ async def test_it_should_return_an_empty_list_when_providing_incorrect_parameter
     assert response.json() == []
 
 
-@pytest.mark.parametrize('category_value, priority_value', [('', Priority.MEDIUM.value), (DefectCategory.NOTEBOOK, '')])
+@pytest.mark.parametrize(
+    'category_value, priority_value',
+    [
+        (DefectCategory.NOTEBOOK.value, ''),
+        ('', Priority.MEDIUM.value),
+        ('', ''),
+    ],
+)
 async def test_should_return_status_404_when_providing_empty_parameters(
     category_value,
     priority_value,

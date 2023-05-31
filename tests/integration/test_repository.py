@@ -80,8 +80,8 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
     [
         ('', Priority.MEDIUM.value),
         ('dummy value for category', Priority.MEDIUM.value),
-        (DefectCategory.NOTEBOOK, ''),
-        (DefectCategory.NOTEBOOK, 'dummy value for priority'),
+        (DefectCategory.NOTEBOOK.value, ''),
+        (DefectCategory.NOTEBOOK.value, 'dummy value for priority'),
     ],
 )
 async def test_it_should_return_an_empty_list_when_not_given_the_correct_parameters(
