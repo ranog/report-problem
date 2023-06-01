@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import pytest
 from httpx import AsyncClient
 
-from src.model import DefectCategory, Priority, Status
+from src.model import Defect, Priority, Status
 from src.repository import COLLECTION_NAME
 
 
@@ -34,7 +34,7 @@ async def test_it_should_return_400_when_category_is_not_valid(
     expected_msg = {
         'category': (
             f"'{category_value}': value is not a valid enumeration member; permitted: "
-            f"'{DefectCategory.NOTEBOOK.value}', '{DefectCategory.SOFTWARE.value}', '{DefectCategory.PERIPHERAL.value}'"
+            f"'{Defect.NOTEBOOK.value}', '{Defect.SOFTWARE.value}', '{Defect.PERIPHERAL.value}'"
         )
     }
 
@@ -148,7 +148,7 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.SOFTWARE.value,
+        'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -159,7 +159,7 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'user_id': '111111111',
         'user_email': 'user@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.SOFTWARE.value,
+        'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
@@ -169,7 +169,7 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
     await async_http_client.post('/v1/report-issue/', json=payload_2)
     await async_http_client.post('/v1/report-issue/', json=payload_3)
 
-    response = await async_http_client.get(f'/v1/issue-list/{DefectCategory.SOFTWARE.value}/{Priority.MEDIUM.value}/')
+    response = await async_http_client.get(f'/v1/issue-list/{Defect.SOFTWARE.value}/{Priority.MEDIUM.value}/')
 
     assert response.status_code == 200
     assert len(response.json()) == 2
@@ -179,9 +179,9 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
 @pytest.mark.parametrize(
     'category_value, priority_value',
     [
-        (DefectCategory.NOTEBOOK.value, 'dummy value for priority'),
-        ('dummy value for category', Priority.MEDIUM.value),
-        ('dummy value for category', 'dummy value for priority'),
+        (Defect.NOTEBOOK.value, 'dummy_priority'),
+        ('dummy_category', Priority.MEDIUM.value),
+        ('dummy_category', 'dummy_priority'),
     ],
 )
 async def test_it_should_return_an_empty_list_when_providing_incorrect_parameters(
@@ -201,7 +201,7 @@ async def test_it_should_return_an_empty_list_when_providing_incorrect_parameter
 @pytest.mark.parametrize(
     'category_value, priority_value',
     [
-        (DefectCategory.NOTEBOOK.value, ''),
+        (Defect.NOTEBOOK.value, ''),
         ('', Priority.MEDIUM.value),
         ('', ''),
     ],

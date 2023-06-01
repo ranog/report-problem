@@ -6,7 +6,7 @@ from httpx import AsyncClient
 
 from src.factory import build_issue
 from src.main import app
-from src.model import DefectCategory, Priority, Status
+from src.model import Defect, Priority, Status
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ def payload():
         'user_id': '111111111',
         'user_email': 'user@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.NOTEBOOK.value,
+        'category': Defect.NOTEBOOK.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,

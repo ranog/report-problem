@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import pytest
 
 from src.factory import build_issue
-from src.model import DefectCategory, Priority, Status
+from src.model import Defect, Priority, Status
 from src.repository import COLLECTION_NAME, IssueRepository
 
 
@@ -47,7 +47,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.SOFTWARE.value,
+        'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -58,7 +58,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
         'user_id': '111111111',
         'user_email': 'user@email.com',
         'description': 'dummy description',
-        'category': DefectCategory.SOFTWARE.value,
+        'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
@@ -69,7 +69,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
-    issues = await repository.filter(category=DefectCategory.SOFTWARE.value, priority=Priority.MEDIUM.value)
+    issues = await repository.filter(category=Defect.SOFTWARE.value, priority=Priority.MEDIUM.value)
 
     assert len(issues) == 2
     assert issues == [payload_2, payload_3]
@@ -80,8 +80,8 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
     [
         ('', Priority.MEDIUM.value),
         ('dummy value for category', Priority.MEDIUM.value),
-        (DefectCategory.NOTEBOOK.value, ''),
-        (DefectCategory.NOTEBOOK.value, 'dummy value for priority'),
+        (Defect.NOTEBOOK.value, ''),
+        (Defect.NOTEBOOK.value, 'dummy value for priority'),
     ],
 )
 async def test_it_should_return_an_empty_list_when_not_given_the_correct_parameters(
