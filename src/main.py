@@ -23,12 +23,12 @@ async def report_issue(json: dict):
     return JSONResponse(issue, status_code=400)
 
 
-@app.get('/v1/{issue_id}/')
+@app.get('/v1/issue/{issue_id}/')
 async def get_issue_by_id(issue_id: str):
     return await get_issue(issue_id)
 
 
-@app.get('/v1/issue-list/{category}/{priority}/')
-async def get_issues(category: str, priority: str):
+@app.get('/v1/issues/')
+async def get_issues(category: str, priority: str | None = None):
     issues = await get_issue_list(category=category, priority=priority)
     return JSONResponse(issues, status_code=200)

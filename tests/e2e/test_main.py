@@ -114,7 +114,7 @@ async def test_it_should_successfully_get_issue(payload, clean_collection, async
     await clean_collection(COLLECTION_NAME)
     issue_info = await async_http_client.post('/v1/report-issue/', json=payload)
 
-    response = await async_http_client.get(f'/v1/{issue_info.json()}/')
+    response = await async_http_client.get(f'/v1/issue/{issue_info.json()}/')
 
     assert response.status_code == 200
     assert response.json() == payload
@@ -123,7 +123,7 @@ async def test_it_should_successfully_get_issue(payload, clean_collection, async
 async def test_it_should_return_status_404_when_not_providing_an_id(clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.get('/v1//')
+    response = await async_http_client.get('/v1/issue/')
 
     assert response.status_code == 404
     assert response.json() == {'detail': 'Not Found'}
@@ -135,7 +135,7 @@ async def test_it_should_return_an_empty_dict_when_passing_the_issue_id_which_do
 ):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.get('/v1/dummy_id/')
+    response = await async_http_client.get('/v1/issue/dummy_id/')
 
     assert response.status_code == 200
     assert response.json() == {}
@@ -169,7 +169,9 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
     await async_http_client.post('/v1/report-issue/', json=payload_2)
     await async_http_client.post('/v1/report-issue/', json=payload_3)
 
-    response = await async_http_client.get(f'/v1/issue-list/{Defect.SOFTWARE.value}/{Priority.MEDIUM.value}/')
+    response = await async_http_client.get(
+        f'/v1/issues/?category={Defect.SOFTWARE.value}&priority={Priority.MEDIUM.value}'
+    )
 
     assert response.status_code == 200
     assert len(response.json()) == 2
@@ -182,6 +184,9 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         (Defect.NOTEBOOK.value, 'dummy_priority'),
         ('dummy_category', Priority.MEDIUM.value),
         ('dummy_category', 'dummy_priority'),
+        (Defect.NOTEBOOK.value, ''),
+        ('', Priority.MEDIUM.value),
+        ('', ''),
     ],
 )
 async def test_it_should_return_an_empty_list_when_providing_incorrect_parameters(
@@ -192,29 +197,7 @@ async def test_it_should_return_an_empty_list_when_providing_incorrect_parameter
 ):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.get(f'/v1/issue-list/{category_value}/{priority_value}/')
+    response = await async_http_client.get(f'/v1/issues/?category={category_value}&priority={priority_value}')
 
     assert response.status_code == 200
     assert response.json() == []
-
-
-@pytest.mark.parametrize(
-    'category_value, priority_value',
-    [
-        (Defect.NOTEBOOK.value, ''),
-        ('', Priority.MEDIUM.value),
-        ('', ''),
-    ],
-)
-async def test_should_return_status_404_when_providing_empty_parameters(
-    category_value,
-    priority_value,
-    clean_collection,
-    async_http_client: AsyncClient,
-):
-    await clean_collection(COLLECTION_NAME)
-
-    response = await async_http_client.get(f'/v1/issue-list/{category_value}/{priority_value}/')
-
-    assert response.status_code == 404
-    assert response.json() == {'detail': 'Not Found'}
