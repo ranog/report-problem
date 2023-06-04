@@ -201,3 +201,13 @@ async def test_it_should_return_an_empty_list_when_providing_incorrect_parameter
 
     assert response.status_code == 200
     assert response.json() == []
+
+
+async def test_it_should_successfully_update_issue(clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    items = {'owner_email': 'another@engineer.com'}
+
+    response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)
+
+    assert response.status_code == 200
+    assert response.json() == 'update performed successfully'

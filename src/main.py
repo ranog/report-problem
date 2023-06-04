@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.service import create_issue, get_issue, get_issue_list
+from src.services import create_issue, get_issue, get_issue_list
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -32,3 +32,8 @@ async def get_issue_by_id(issue_id: str):
 async def get_issues(category: str, priority: str | None = None):
     issues = await get_issue_list(category=category, priority=priority)
     return JSONResponse(issues, status_code=200)
+
+
+@app.patch('/v1/update-issue/{issue_id}/')
+async def update_issues(issue_id: str, items: dict):
+    return JSONResponse(content='update performed successfully', status_code=200)
