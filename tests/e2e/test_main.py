@@ -31,12 +31,14 @@ async def test_it_should_return_400_when_category_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['category'] = category_value
-    expected_msg = {
-        'category': (
-            f"'{category_value}': value is not a valid enumeration member; permitted: "
-            f"'{Defect.NOTEBOOK.value}', '{Defect.SOFTWARE.value}', '{Defect.PERIPHERAL.value}'"
-        )
-    }
+    expected_msg = (
+        '1 validation error for NewIssue\n'
+        'category\n'
+        '  value is not a valid enumeration member; '
+        f"permitted: '{Defect.NOTEBOOK.value}', '{Defect.SOFTWARE.value}', '{Defect.PERIPHERAL.value}' "
+        '(type=type_error.enum; '
+        "enum_values=[<Defect.NOTEBOOK: 'notebook'>, <Defect.SOFTWARE: 'software'>, <Defect.PERIPHERAL: 'periferico'>])"
+    )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
 
@@ -53,12 +55,14 @@ async def test_it_should_return_400_when_priority_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['priority'] = priority_value
-    expected_msg = {
-        'priority': (
-            f"'{priority_value}': value is not a valid enumeration member; permitted: "
-            f"'{Priority.HIGH.value}', '{Priority.MEDIUM.value}', '{Priority.LOW.value}'"
-        )
-    }
+    expected_msg = (
+        '1 validation error for NewIssue\n'
+        'priority\n'
+        '  value is not a valid enumeration member; '
+        f"permitted: '{Priority.HIGH.value}', '{Priority.MEDIUM.value}', '{Priority.LOW.value}' "
+        '(type=type_error.enum; '
+        "enum_values=[<Priority.HIGH: 'high'>, <Priority.MEDIUM: 'medium'>, <Priority.LOW: 'low'>])"
+    )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
 
@@ -75,12 +79,14 @@ async def test_it_should_return_400_when_status_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     payload['status'] = status_value
-    expected_msg = {
-        'status': (
-            f"'{status_value}': value is not a valid enumeration member; permitted: "
-            f"'{Status.TO_DO.value}', '{Status.IN_PROGRESS.value}', '{Status.DONE.value}'"
-        )
-    }
+    expected_msg = (
+        '1 validation error for NewIssue\n'
+        'status\n'
+        '  value is not a valid enumeration member; '
+        f"permitted: '{Status.TO_DO.value}', '{Status.IN_PROGRESS.value}', '{Status.DONE.value}' "
+        '(type=type_error.enum; '
+        "enum_values=[<Status.TO_DO: 'to_do'>, <Status.IN_PROGRESS: 'in_progress'>, <Status.DONE: 'done'>])"
+    )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
 
@@ -93,16 +99,25 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-    expected_msg = {
-        'username': "'': field required",
-        'user_id': "'': field required",
-        'user_email': "'': field required",
-        'description': "'': field required",
-        'category': "'': field required",
-        'priority': "'': field required",
-        'status': "'': field required",
-        'owner_email': "'': field required",
-    }
+    expected_msg = (
+        '8 validation errors for NewIssue\n'
+        'username\n'
+        '  field required (type=value_error.missing)\n'
+        'user_id\n'
+        '  field required (type=value_error.missing)\n'
+        'user_email\n'
+        '  field required (type=value_error.missing)\n'
+        'description\n'
+        '  field required (type=value_error.missing)\n'
+        'category\n'
+        '  field required (type=value_error.missing)\n'
+        'priority\n'
+        '  field required (type=value_error.missing)\n'
+        'status\n'
+        '  field required (type=value_error.missing)\n'
+        'owner_email\n'
+        '  field required (type=value_error.missing)'
+    )
 
     response = await async_http_client.post('/v1/report-issue/', json={})
 
