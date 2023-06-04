@@ -27,4 +27,4 @@ async def get_issue(issue_id: str, repository: IssueRepository = None):
 async def get_issue_list(category: str, priority: str, repository: IssueRepository = None):
     if repository is None:
         repository = IssueRepository()
-    return await repository.filter(category=category, priority=priority)
+    return await repository.list(category=category, priority=priority)

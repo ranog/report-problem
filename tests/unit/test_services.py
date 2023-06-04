@@ -1,6 +1,6 @@
 from src.model import NewIssue
 from src.repository import IssueRepository
-from src.service import create_issue
+from src.services import create_issue
 
 
 class FakeIssueRepository(IssueRepository):

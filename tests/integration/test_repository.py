@@ -69,7 +69,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
-    issues = await repository.filter(category=Defect.SOFTWARE.value, priority=Priority.MEDIUM.value)
+    issues = await repository.list(category=Defect.SOFTWARE.value, priority=Priority.MEDIUM.value)
 
     assert len(issues) == 2
     assert issues == [payload_2, payload_3]
@@ -91,6 +91,6 @@ async def test_it_should_return_an_empty_list_when_not_given_the_correct_paramet
 ):
     await clean_collection(COLLECTION_NAME)
     repository = IssueRepository()
-    issues = await repository.filter(category=category_value, priority=priority_value)
+    issues = await repository.list(category=category_value, priority=priority_value)
 
     assert issues == []

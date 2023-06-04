@@ -33,7 +33,7 @@ class IssueRepository:
             return self._convert_datetime(issue)
         return {}
 
-    async def filter(self, category: str, priority: str):
+    async def list(self, category: str, priority: str):
         query = (
             self.collection.where('category', '==', category).where('priority', '==', priority).order_by('created_at')
         )
