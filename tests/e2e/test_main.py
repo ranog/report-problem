@@ -226,3 +226,120 @@ async def test_it_should_successfully_update_issue(clean_collection, async_http_
 
     assert response.status_code == 200
     assert response.json() == 'update performed successfully'
+
+
+async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_parameters(
+    payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    await async_http_client.post('/v1/report-issue/', json=payload)
+    await async_http_client.post('/v1/report-issue/', json=payload_2)
+    await async_http_client.post('/v1/report-issue/', json=payload_3)
+
+    response = await async_http_client.get(f'/v1/issues/?category={Defect.SOFTWARE.value}')
+
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert response.json() == [payload_2, payload_3]
+
+
+async def test_it_should_return_the_calls_of_the_priority_provided_in_the_query_parameters(
+    payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    await async_http_client.post('/v1/report-issue/', json=payload)
+    await async_http_client.post('/v1/report-issue/', json=payload_2)
+    await async_http_client.post('/v1/report-issue/', json=payload_3)
+
+    response = await async_http_client.get(f'/v1/issues/?priority={Priority.HIGH.value}')
+
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert response.json() == [payload, payload_3]
+
+
+async def test_it_should_return_calls_in_chronological_order_when_no_query_parameter_is_passed(
+    payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime(2000, 12, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    await async_http_client.post('/v1/report-issue/', json=payload)
+    await async_http_client.post('/v1/report-issue/', json=payload_2)
+    await async_http_client.post('/v1/report-issue/', json=payload_3)
+
+    response = await async_http_client.get('/v1/issues/')
+
+    assert response.status_code == 200
+    assert len(response.json()) == 3
+    assert response.json() == [payload_3, payload_2, payload]

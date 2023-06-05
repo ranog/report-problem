@@ -32,7 +32,7 @@ async def get_issue_by_id(issue_id: str):
 
 
 @app.get('/v1/issues/')
-async def get_issues(category: str, priority: str | None = None):
+async def get_issues(category: str = None, priority: str = None):
     return await IssueRepository().list(category=category, priority=priority)
 
 

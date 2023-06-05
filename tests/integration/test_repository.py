@@ -94,3 +94,73 @@ async def test_it_should_return_an_empty_list_when_not_given_the_correct_paramet
     issues = await repository.list(category=category_value, priority=priority_value)
 
     assert issues == []
+
+
+async def test_it_should_return_items_from_the_given_category(payload, clean_collection):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.DONE.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    repository = IssueRepository()
+    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_2))
+    await repository.add(build_issue(payload_3))
+
+    issues = await repository.list(category=Defect.SOFTWARE.value)
+
+    assert len(issues) == 2
+    assert issues == [payload_2, payload_3]
+
+
+async def test_it_should_return_items_of_given_priority(payload, clean_collection):
+    await clean_collection(COLLECTION_NAME)
+    payload_2 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.MEDIUM.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'owner_email': 'other_specific@engineer.com',
+    }
+    payload_3 = {
+        'username': 'dummy name',
+        'user_id': '111111111',
+        'user_email': 'user@email.com',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime.now(timezone.utc)),
+        'status': Status.DONE.value,
+        'owner_email': 'specific@engineer.com',
+    }
+    repository = IssueRepository()
+    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_2))
+    await repository.add(build_issue(payload_3))
+
+    issues = await repository.list(priority=Priority.HIGH.value)
+
+    assert len(issues) == 2
+    assert issues == [payload, payload_3]
