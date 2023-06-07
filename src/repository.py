@@ -1,3 +1,4 @@
+from google.api_core.exceptions import NotFound
 from google.cloud import firestore
 
 from src.model import NewIssue
@@ -46,4 +47,7 @@ class IssueRepository:
 
     async def update(self, issue_id: str, items: dict):
         issue_ref = self.collection.document(issue_id)
-        await issue_ref.update(items)
+        try:
+            await issue_ref.update(items)
+        except NotFound:
+            raise ValueError(f'{issue_id} not found.')

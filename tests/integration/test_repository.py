@@ -166,14 +166,28 @@ async def test_it_should_return_items_of_given_priority(payload, clean_collectio
     assert issues == [payload, payload_3]
 
 
-async def test_it_should_update_the_provided_field(payload, clean_collection):
+async def test_it_should_update_all_fields_provided(payload, clean_collection):
     await clean_collection(COLLECTION_NAME)
     repository = IssueRepository()
     issue_id = await repository.add(build_issue(payload))
-    item_to_update = {'owner_email': 'email@updated.com'}
+    item_to_update = {
+        'owner_email': 'email@updated.com',
+        'status': Status.IN_PROGRESS.value,
+        'priority': Priority.LOW.value,
+    }
 
     await repository.update(issue_id=issue_id, items=item_to_update)
 
     issue = await repository.get(issue_id)
 
     assert issue['owner_email'] == item_to_update['owner_email']
+    assert issue['status'] == item_to_update['status']
+    assert issue['priority'] == item_to_update['priority']
+
+
+async def test_should_raise_an_exception_when_passing_an_issue_id_that_does_not_exist(clean_collection):
+    await clean_collection(COLLECTION_NAME)
+
+    with pytest.raises(ValueError) as error:
+        await IssueRepository().update(issue_id='dummy_issue_id', items={'owner_email': 'email@updated.com'})
+    assert str(error.value) == 'dummy_issue_id not found.'
