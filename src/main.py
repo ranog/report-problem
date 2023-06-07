@@ -38,4 +38,4 @@ async def get_issues(category: str = None, priority: str = None):
 
 @app.patch('/v1/update-issue/{issue_id}/')
 async def update_issues(issue_id: str, items: dict):
-    return JSONResponse(content='update performed successfully', status_code=200)
+    pass

@@ -164,3 +164,16 @@ async def test_it_should_return_items_of_given_priority(payload, clean_collectio
 
     assert len(issues) == 2
     assert issues == [payload, payload_3]
+
+
+async def test_it_should_update_the_provided_field(payload, clean_collection):
+    await clean_collection(COLLECTION_NAME)
+    repository = IssueRepository()
+    issue_id = await repository.add(build_issue(payload))
+    item_to_update = {'owner_email': 'email@updated.com'}
+
+    await repository.update(issue_id=issue_id, items=item_to_update)
+
+    issue = await repository.get(issue_id)
+
+    assert issue['owner_email'] == item_to_update['owner_email']

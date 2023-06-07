@@ -43,3 +43,7 @@ class IssueRepository:
             query = query.where('priority', '==', priority)
 
         return [self._convert_datetime(issue) for issue in await query.get()]
+
+    async def update(self, issue_id: str, items: dict):
+        issue_ref = self.collection.document(issue_id)
+        await issue_ref.update(items)

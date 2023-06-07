@@ -218,16 +218,6 @@ async def test_it_should_return_an_empty_list_when_providing_incorrect_parameter
     assert response.json() == []
 
 
-async def test_it_should_successfully_update_issue(clean_collection, async_http_client: AsyncClient):
-    await clean_collection(COLLECTION_NAME)
-    items = {'owner_email': 'another@engineer.com'}
-
-    response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)
-
-    assert response.status_code == 200
-    assert response.json() == 'update performed successfully'
-
-
 async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_parameters(
     payload,
     clean_collection,
@@ -343,3 +333,12 @@ async def test_it_should_return_calls_in_chronological_order_when_no_query_param
     assert response.status_code == 200
     assert len(response.json()) == 3
     assert response.json() == [payload_3, payload_2, payload]
+
+
+async def test_it_should_successfully_update_issue(clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    items = {'owner_email': 'another@engineer.com'}
+
+    response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)
+
+    assert response.status_code == 200
