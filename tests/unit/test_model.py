@@ -123,3 +123,17 @@ def test_test_owner_field_must_have_an_email_in_valid_format(owner_email_value):
         )
     assert len(error.value.errors()) == 1
     assert 'value is not a valid email address' in str(error.value)
+
+
+def test_owner_field_should_be_created_empty_when_not_provided():
+    issue = NewIssue(
+        username='dummy name',
+        category=Defect.NOTEBOOK.value,
+        user_id='1',
+        user_email='dummy@email.c',
+        description='dummy description',
+        priority=Priority.HIGH.value,
+        created_at=str(datetime.now(timezone.utc)),
+        status=Status.TO_DO.value,
+    )
+    assert issue.owner_email == ''

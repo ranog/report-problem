@@ -31,4 +31,4 @@ class NewIssue(BaseModel):
     priority: Priority
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
-    owner_email: EmailStr
+    owner_email: EmailStr = ''

@@ -100,23 +100,21 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
 ):
     await clean_collection(COLLECTION_NAME)
     expected_msg = (
-        '8 validation errors for NewIssue\n'
-        'username\n'
-        '  field required (type=value_error.missing)\n'
-        'user_id\n'
-        '  field required (type=value_error.missing)\n'
-        'user_email\n'
-        '  field required (type=value_error.missing)\n'
-        'description\n'
-        '  field required (type=value_error.missing)\n'
-        'category\n'
-        '  field required (type=value_error.missing)\n'
-        'priority\n'
-        '  field required (type=value_error.missing)\n'
-        'status\n'
-        '  field required (type=value_error.missing)\n'
-        'owner_email\n'
-        '  field required (type=value_error.missing)'
+        '7 validation errors for NewIssue\n'
+        'username\n  '
+        'field required (type=value_error.missing)\n'
+        'user_id\n  '
+        'field required (type=value_error.missing)\n'
+        'user_email\n  '
+        'field required (type=value_error.missing)\n'
+        'description\n  '
+        'field required (type=value_error.missing)\n'
+        'category\n  '
+        'field required (type=value_error.missing)\n'
+        'priority\n  '
+        'field required (type=value_error.missing)\n'
+        'status\n  '
+        'field required (type=value_error.missing)'
     )
 
     response = await async_http_client.post('/v1/report-issue/', json={})
