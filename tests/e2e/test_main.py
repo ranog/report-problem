@@ -335,10 +335,62 @@ async def test_it_should_return_calls_in_chronological_order_when_no_query_param
     assert response.json() == [payload_3, payload_2, payload]
 
 
-async def test_it_should_successfully_update_issue(clean_collection, async_http_client: AsyncClient):
+async def test_it_should_successfully_update_the_fields_provided_in_items(
+    payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
     await clean_collection(COLLECTION_NAME)
-    items = {'owner_email': 'another@engineer.com'}
+    issue_post_response = await async_http_client.post('/v1/report-issue/', json=payload)
+    issue_id = issue_post_response.json()
+    items = {
+        'owner_email': 'email@updated.com',
+        'status': Status.IN_PROGRESS.value,
+        'priority': Priority.LOW.value,
+    }
+
+    response = await async_http_client.patch(f'/v1/update-issue/{issue_id}/', json=items)
+    issue_get_response = await async_http_client.get(f'/v1/issue/{issue_id}/')
+    issue = issue_get_response.json()
+
+    assert response.status_code == 200
+    assert issue['owner_email'] == items['owner_email']
+    assert issue['status'] == items['status']
+    assert issue['priority'] == items['priority']
+
+
+async def test_it_should_return_not_found_when_issue_id_is_not_valid(
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    items = {
+        'owner_email': 'email@updated.com',
+        'status': Status.IN_PROGRESS.value,
+        'priority': Priority.LOW.value,
+    }
 
     response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)
 
-    assert response.status_code == 200
+    assert response.status_code == 404
+    assert response.json() == 'dummy_id not found.'
+
+
+async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
+    payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    issue_doc = await async_http_client.post('/v1/report-issue/', json=payload)
+    issue_id = issue_doc.json()
+    items = {
+        'owner_email': 'email@updated.com',
+        'status': Status.IN_PROGRESS.value,
+        'dummy_field': 'dummy_value',
+    }
+
+    response = await async_http_client.patch(f'/v1/update-issue/{issue_id}/', json=items)
+
+    assert response.status_code == 400
+    assert response.json() == 'dummy_field field not exist.'

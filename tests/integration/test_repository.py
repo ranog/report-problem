@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
-
+import os
+from google.api_core.exceptions import NotFound
 import pytest
 
 from src.factory import build_issue
@@ -188,6 +189,11 @@ async def test_it_should_update_all_fields_provided(payload, clean_collection):
 async def test_should_raise_an_exception_when_passing_an_issue_id_that_does_not_exist(clean_collection):
     await clean_collection(COLLECTION_NAME)
 
-    with pytest.raises(ValueError) as error:
+    expected_msg = (
+        '404 No document to update: '
+        f"projects/{os.environ['GCLOUD_PROJECT']}/databases/(default)/documents/{COLLECTION_NAME}/dummy_issue_id"
+    )
+
+    with pytest.raises(NotFound) as error:
         await IssueRepository().update(issue_id='dummy_issue_id', items={'owner_email': 'email@updated.com'})
-    assert str(error.value) == 'dummy_issue_id not found.'
+    assert str(error.value) == expected_msg
