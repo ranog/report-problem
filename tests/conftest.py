@@ -30,12 +30,13 @@ def payload():
         'username': 'dummy name',
         'user_id': '111111111',
         'user_email': 'user@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.NOTEBOOK.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'responsible_expert': 'specific@engineer.com',
     }
 
 

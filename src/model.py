@@ -26,9 +26,10 @@ class NewIssue(BaseModel):
     username: str
     user_id: str
     user_email: EmailStr
+    contact_phone: str
     description: str
     category: Defect
     priority: Priority
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
-    owner_email: EmailStr = ''
+    responsible_expert: EmailStr = ''

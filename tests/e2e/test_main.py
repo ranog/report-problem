@@ -100,12 +100,14 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
 ):
     await clean_collection(COLLECTION_NAME)
     expected_msg = (
-        '7 validation errors for NewIssue\n'
+        '8 validation errors for NewIssue\n'
         'username\n  '
         'field required (type=value_error.missing)\n'
         'user_id\n  '
         'field required (type=value_error.missing)\n'
         'user_email\n  '
+        'field required (type=value_error.missing)\n'
+        'contact_phone\n  '
         'field required (type=value_error.missing)\n'
         'description\n  '
         'field required (type=value_error.missing)\n'
@@ -160,23 +162,25 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'username': 'dummy name',
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'other_specific@engineer.com',
+        'responsible_expert': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
         'user_id': '111111111',
         'user_email': 'user@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'responsible_expert': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -226,23 +230,25 @@ async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_
         'username': 'dummy name',
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'other_specific@engineer.com',
+        'responsible_expert': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
         'user_id': '111111111',
         'user_email': 'user@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'responsible_expert': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -265,23 +271,25 @@ async def test_it_should_return_the_calls_of_the_priority_provided_in_the_query_
         'username': 'dummy name',
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'other_specific@engineer.com',
+        'responsible_expert': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
         'user_id': '111111111',
         'user_email': 'user@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'responsible_expert': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -304,23 +312,25 @@ async def test_it_should_return_calls_in_chronological_order_when_no_query_param
         'username': 'dummy name',
         'user_id': '99999999999999',
         'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'other_specific@engineer.com',
+        'responsible_expert': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
         'user_id': '111111111',
         'user_email': 'user@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
         'category': Defect.SOFTWARE.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime(2000, 12, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'owner_email': 'specific@engineer.com',
+        'responsible_expert': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -342,7 +352,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
     issue_post_response = await async_http_client.post('/v1/report-issue/', json=payload)
     issue_id = issue_post_response.json()
     items = {
-        'owner_email': 'email@updated.com',
+        'responsible_expert': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'priority': Priority.LOW.value,
     }
@@ -352,7 +362,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
     issue = issue_get_response.json()
 
     assert response.status_code == 200
-    assert issue['owner_email'] == items['owner_email']
+    assert issue['responsible_expert'] == items['responsible_expert']
     assert issue['status'] == items['status']
     assert issue['priority'] == items['priority']
 
@@ -363,7 +373,7 @@ async def test_it_should_return_not_found_when_issue_id_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     items = {
-        'owner_email': 'email@updated.com',
+        'responsible_expert': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'priority': Priority.LOW.value,
     }
@@ -383,7 +393,7 @@ async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
     issue_doc = await async_http_client.post('/v1/report-issue/', json=payload)
     issue_id = issue_doc.json()
     items = {
-        'owner_email': 'email@updated.com',
+        'responsible_expert': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'dummy_field': 'dummy_value',
     }
