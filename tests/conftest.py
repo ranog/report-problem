@@ -36,7 +36,7 @@ def payload():
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
 
 

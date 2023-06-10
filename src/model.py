@@ -32,4 +32,4 @@ class NewIssue(BaseModel):
     priority: Priority
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
-    responsible_expert: EmailStr = ''
+    responsible_engineer: EmailStr = ''

@@ -168,7 +168,7 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -180,7 +180,7 @@ async def test_it_should_successfully_issue_list(payload, clean_collection, asyn
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -236,7 +236,7 @@ async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -248,7 +248,7 @@ async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -277,7 +277,7 @@ async def test_it_should_return_the_calls_of_the_priority_provided_in_the_query_
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -289,7 +289,7 @@ async def test_it_should_return_the_calls_of_the_priority_provided_in_the_query_
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -318,7 +318,7 @@ async def test_it_should_return_calls_in_chronological_order_when_no_query_param
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -330,7 +330,7 @@ async def test_it_should_return_calls_in_chronological_order_when_no_query_param
         'priority': Priority.HIGH.value,
         'created_at': str(datetime(2000, 12, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     await async_http_client.post('/v1/report-issue/', json=payload)
     await async_http_client.post('/v1/report-issue/', json=payload_2)
@@ -352,7 +352,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
     issue_post_response = await async_http_client.post('/v1/report-issue/', json=payload)
     issue_id = issue_post_response.json()
     items = {
-        'responsible_expert': 'email@updated.com',
+        'responsible_engineer': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'priority': Priority.LOW.value,
     }
@@ -362,7 +362,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
     issue = issue_get_response.json()
 
     assert response.status_code == 200
-    assert issue['responsible_expert'] == items['responsible_expert']
+    assert issue['responsible_engineer'] == items['responsible_engineer']
     assert issue['status'] == items['status']
     assert issue['priority'] == items['priority']
 
@@ -373,7 +373,7 @@ async def test_it_should_return_not_found_when_issue_id_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     items = {
-        'responsible_expert': 'email@updated.com',
+        'responsible_engineer': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'priority': Priority.LOW.value,
     }
@@ -393,7 +393,7 @@ async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
     issue_doc = await async_http_client.post('/v1/report-issue/', json=payload)
     issue_id = issue_doc.json()
     items = {
-        'responsible_expert': 'email@updated.com',
+        'responsible_engineer': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'dummy_field': 'dummy_value',
     }

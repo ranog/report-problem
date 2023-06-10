@@ -53,7 +53,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -65,7 +65,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
     await repository.add(build_issue(payload))
@@ -111,7 +111,7 @@ async def test_it_should_return_items_from_the_given_category(payload, clean_col
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -123,7 +123,7 @@ async def test_it_should_return_items_from_the_given_category(payload, clean_col
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.DONE.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
     await repository.add(build_issue(payload))
@@ -148,7 +148,7 @@ async def test_it_should_return_items_of_given_priority(payload, clean_collectio
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
-        'responsible_expert': 'other_specific@engineer.com',
+        'responsible_engineer': 'other_specific@engineer.com',
     }
     payload_3 = {
         'username': 'dummy name',
@@ -160,7 +160,7 @@ async def test_it_should_return_items_of_given_priority(payload, clean_collectio
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.DONE.value,
-        'responsible_expert': 'specific@engineer.com',
+        'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
     await repository.add(build_issue(payload))
@@ -178,7 +178,7 @@ async def test_it_should_update_all_fields_provided(payload, clean_collection):
     repository = IssueRepository()
     issue_id = await repository.add(build_issue(payload))
     item_to_update = {
-        'responsible_expert': 'email@updated.com',
+        'responsible_engineer': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,
         'priority': Priority.LOW.value,
     }
@@ -187,7 +187,7 @@ async def test_it_should_update_all_fields_provided(payload, clean_collection):
 
     issue = await repository.get(issue_id)
 
-    assert issue['responsible_expert'] == item_to_update['responsible_expert']
+    assert issue['responsible_engineer'] == item_to_update['responsible_engineer']
     assert issue['status'] == item_to_update['status']
     assert issue['priority'] == item_to_update['priority']
 
@@ -201,5 +201,5 @@ async def test_should_raise_an_exception_when_passing_an_issue_id_that_does_not_
     )
 
     with pytest.raises(NotFound) as error:
-        await IssueRepository().update(issue_id='dummy_issue_id', items={'responsible_expert': 'email@updated.com'})
+        await IssueRepository().update(issue_id='dummy_issue_id', items={'responsible_engineer': 'email@updated.com'})
     assert str(error.value) == expected_msg
