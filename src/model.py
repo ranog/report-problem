@@ -36,6 +36,12 @@ class NewIssue(BaseModel):
 
 
 class NotebookCheck(BaseModel):
-    does_not_turn_on: bool = False
-    power_button_not_working: bool = False
-    screen_not_working: bool = False
+    # high
+    it_is_not_turning_on: bool = False
+    power_button_is_not_working: bool = False
+    screen_is_not_working: bool = False
+
+    # medium
+    keyboard_is_not_working: bool = False
+    touchpad_is_not_working: bool = False
+    not_connecting_to_the_internet: bool = False
