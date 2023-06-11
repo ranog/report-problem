@@ -33,3 +33,9 @@ class NewIssue(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status
     responsible_engineer: EmailStr = ''
+
+
+class NotebookCheck(BaseModel):
+    does_not_turn_on: bool = False
+    power_button_not_working: bool = False
+    screen_not_working: bool = False
