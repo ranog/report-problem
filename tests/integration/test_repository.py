@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
 import os
-from google.api_core.exceptions import NotFound
+from datetime import datetime, timezone
+
 import pytest
+from google.api_core.exceptions import NotFound
 
 from src.factory import build_issue
 from src.model import Defect, Priority, Status
