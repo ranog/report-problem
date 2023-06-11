@@ -7,12 +7,12 @@ from pydantic import BaseModel, EmailStr, Field
 class Defect(str, Enum):
     NOTEBOOK = 'notebook'
     SOFTWARE = 'software'
-    PERIPHERAL = 'periferico'
+    PERIPHERAL = 'peripheral'
 
 
 class Status(str, Enum):
-    TO_DO = 'to_do'
-    IN_PROGRESS = 'in_progress'
+    TO_DO = 'todo'
+    IN_PROGRESS = 'in progress'
     DONE = 'done'
 
 
@@ -50,3 +50,23 @@ class NotebookCheck(BaseModel):
     displays_error_message: bool = False
     does_not_recognize_peripherals: bool = False
     operating_system_does_not_start_correctly: bool = False
+
+
+class SoftwareCheck(BaseModel):
+    name: str
+
+    # high
+    it_is_not_installed_correctly: bool = False
+    run_with_errors: bool = False
+    does_not_respond_to_commands_and_interactions: bool = False
+
+    # medium
+    not_displaying_data_and_content_correctly: bool = False
+    generates_unexpected_results: bool = False
+    not_integrating_with_other_systems_or_devices: bool = False
+
+    # low
+    not_using_required_system_resources: bool = False
+    not_maintaining_security_and_not_protecting_data: bool = False
+    it_is_not_updated_with_the_latest_versions: bool = False
+    other_users_are_having_the_same_problem: bool = False

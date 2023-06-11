@@ -37,7 +37,7 @@ async def test_it_should_return_400_when_category_is_not_valid(
         '  value is not a valid enumeration member; '
         f"permitted: '{Defect.NOTEBOOK.value}', '{Defect.SOFTWARE.value}', '{Defect.PERIPHERAL.value}' "
         '(type=type_error.enum; '
-        "enum_values=[<Defect.NOTEBOOK: 'notebook'>, <Defect.SOFTWARE: 'software'>, <Defect.PERIPHERAL: 'periferico'>])"
+        "enum_values=[<Defect.NOTEBOOK: 'notebook'>, <Defect.SOFTWARE: 'software'>, <Defect.PERIPHERAL: 'peripheral'>])"
     )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
@@ -85,7 +85,7 @@ async def test_it_should_return_400_when_status_is_not_valid(
         '  value is not a valid enumeration member; '
         f"permitted: '{Status.TO_DO.value}', '{Status.IN_PROGRESS.value}', '{Status.DONE.value}' "
         '(type=type_error.enum; '
-        "enum_values=[<Status.TO_DO: 'to_do'>, <Status.IN_PROGRESS: 'in_progress'>, <Status.DONE: 'done'>])"
+        "enum_values=[<Status.TO_DO: 'todo'>, <Status.IN_PROGRESS: 'in progress'>, <Status.DONE: 'done'>])"
     )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
