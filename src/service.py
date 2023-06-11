@@ -15,3 +15,10 @@ def check_notebook(notebook_check: NotebookCheck):
         or notebook_check.not_connecting_to_the_internet
     ):
         return Priority.MEDIUM
+
+    if (
+        notebook_check.displays_error_message
+        or notebook_check.does_not_recognize_peripherals
+        or notebook_check.operating_system_does_not_start_correctly
+    ):
+        return Priority.LOW

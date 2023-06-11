@@ -45,3 +45,8 @@ class NotebookCheck(BaseModel):
     keyboard_is_not_working: bool = False
     touchpad_is_not_working: bool = False
     not_connecting_to_the_internet: bool = False
+
+    # low
+    displays_error_message: bool = False
+    does_not_recognize_peripherals: bool = False
+    operating_system_does_not_start_correctly: bool = False
