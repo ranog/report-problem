@@ -6,7 +6,9 @@ from src.model import Defect, NewIssue, Priority, Status
 
 
 @pytest.mark.parametrize('category_value', ['', 'dummy category'])
-def test_category_field_must_not_accept_values_that_are_not_listed_in_the_defect_category(category_value):
+def test_category_field_must_not_accept_values_that_are_not_listed_in_the_defect_category(
+    category_value,
+):
     with pytest.raises(ValueError) as error:
         NewIssue(
             username='dummy name',
@@ -25,7 +27,9 @@ def test_category_field_must_not_accept_values_that_are_not_listed_in_the_defect
 
 
 @pytest.mark.parametrize('priority_value', ['', 'dummy priority'])
-def test_priority_field_must_not_accept_values_that_are_not_listed_in_the_priority(priority_value):
+def test_priority_field_must_not_accept_values_that_are_not_listed_in_the_priority(
+    priority_value,
+):
     with pytest.raises(ValueError) as error:
         NewIssue(
             username='dummy name',
@@ -44,7 +48,9 @@ def test_priority_field_must_not_accept_values_that_are_not_listed_in_the_priori
 
 
 @pytest.mark.parametrize('status_value', ['', 'dummy status'])
-def test_status_field_must_not_accept_values_that_are_not_listed_in_the_status(status_value):
+def test_status_field_must_not_accept_values_that_are_not_listed_in_the_status(
+    status_value,
+):
     with pytest.raises(ValueError) as error:
         NewIssue(
             username='dummy name',
@@ -114,7 +120,9 @@ def test_owner_field_should_be_a_valid_form_of_email():
 
 
 @pytest.mark.parametrize('responsible_engineer_value', ['', 'dummy owner email'])
-def test_test_owner_field_must_have_an_email_in_valid_format(responsible_engineer_value):
+def test_test_owner_field_must_have_an_email_in_valid_format(
+    responsible_engineer_value,
+):
     with pytest.raises(ValueError) as error:
         NewIssue(
             username='dummy name',
