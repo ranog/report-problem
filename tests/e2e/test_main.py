@@ -100,7 +100,7 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
 ):
     await clean_collection(COLLECTION_NAME)
     expected_msg = (
-        '8 validation errors for NewIssue\n'
+        '7 validation errors for NewIssue\n'
         'username\n  '
         'field required (type=value_error.missing)\n'
         'user_id\n  '
@@ -114,8 +114,6 @@ async def test_it_should_return_status_code_400_when_the_new_issue_is_empty(
         'category\n  '
         'field required (type=value_error.missing)\n'
         'priority\n  '
-        'field required (type=value_error.missing)\n'
-        'status\n  '
         'field required (type=value_error.missing)'
     )
 
