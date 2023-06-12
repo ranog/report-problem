@@ -70,3 +70,23 @@ class SoftwareCheck(BaseModel):
     not_maintaining_security_and_not_protecting_data: bool = False
     it_is_not_updated_with_the_latest_versions: bool = False
     other_users_are_having_the_same_problem: bool = False
+
+
+class PeripheralCheck(BaseModel):
+    peripheral_type: str
+
+    # high
+    does_not_connect: bool = False
+    operating_system_is_not_recognizing: bool = False
+    does_not_work_without_displaying_errors_or_failure_messages: bool = False
+
+    # medium
+    does_not_respond_to_commands: bool = False
+    does_not_perform_its_main_functions: bool = False
+    does_not_integrate_with_other_devices_or_components: bool = False
+
+    # low
+    does_not_receive_power_or_is_not_turned_on: bool = False
+    is_not_up_to_date_with_the_latest_versions_of_drivers_or_firmware: bool = False
+    other_users_are_using_the_same_peripheral_and_are_having_the_same_problem: bool = False
+    does_not_maintain_data_security_and_protection: bool = False
