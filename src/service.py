@@ -1,16 +1,7 @@
-from src.model import NotebookCheck, PeripheralCheck, Priority, SoftwareCheck
+from src.model import Defect, NotebookCheck, PeripheralCheck, Priority, SoftwareCheck
 
 
-def _decide_priority(high: list[bool], medium: list[bool], low: list[bool]) -> Priority:
-    if any(high):
-        return Priority.HIGH
-    if any(medium):
-        return Priority.MEDIUM
-    if any(low):
-        return Priority.LOW
-
-
-def check_notebook(notebook_check: NotebookCheck) -> Priority:
+def _check_notebook(notebook_check: NotebookCheck) -> dict:
     high = [
         notebook_check.it_is_not_turning_on,
         notebook_check.power_button_is_not_working,
@@ -27,10 +18,10 @@ def check_notebook(notebook_check: NotebookCheck) -> Priority:
         notebook_check.operating_system_does_not_start_correctly,
     ]
 
-    return _decide_priority(high=high, medium=medium, low=low)
+    return {'high': high, 'medium': medium, 'low': low}
 
 
-def check_software(software_check: SoftwareCheck) -> Priority:
+def _check_software(software_check: SoftwareCheck) -> dict:
     high = [
         software_check.it_is_not_installed_correctly,
         software_check.run_with_errors,
@@ -48,10 +39,10 @@ def check_software(software_check: SoftwareCheck) -> Priority:
         software_check.other_users_are_having_the_same_problem,
     ]
 
-    return _decide_priority(high=high, medium=medium, low=low)
+    return {'high': high, 'medium': medium, 'low': low}
 
 
-def check_peripheral(peripheral_check: PeripheralCheck):
+def _check_peripheral(peripheral_check: PeripheralCheck):
     high = [
         peripheral_check.does_not_connect,
         peripheral_check.operating_system_is_not_recognizing,
@@ -69,4 +60,24 @@ def check_peripheral(peripheral_check: PeripheralCheck):
         peripheral_check.does_not_maintain_data_security_and_protection,
     ]
 
-    return _decide_priority(high=high, medium=medium, low=low)
+    return {'high': high, 'medium': medium, 'low': low}
+
+
+def select_priority(json: dict) -> Priority:
+    match json['category']:
+        case Defect.NOTEBOOK.value:
+            notebook_check = NotebookCheck(**json)
+            priorities = _check_notebook(notebook_check)
+        case Defect.SOFTWARE.value:
+            software_check = SoftwareCheck(**json)
+            priorities = _check_software(software_check)
+        case Defect.PERIPHERAL.value:
+            peripheral_check = PeripheralCheck(**json)
+            priorities = _check_peripheral(peripheral_check)
+
+    if any(priorities['high']):
+        return Priority.HIGH
+    if any(priorities['medium']):
+        return Priority.MEDIUM
+    if any(priorities['low']):
+        return Priority.LOW
