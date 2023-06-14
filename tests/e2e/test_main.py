@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from src.model import Defect, Priority, Status
+from src.model import Category, Priority, Status
 from src.repository import COLLECTION_NAME
 
 
@@ -31,10 +31,10 @@ async def test_it_should_return_400_when_category_is_not_valid(
     payload['category'] = category_value
     expected_msg = (
         "2 validation errors for NewIssue\ncategory\n  value is not a valid enumeration member; permitted: 'notebook', "
-        "'software', 'peripheral' (type=type_error.enum; enum_values=[<Defect.NOTEBOOK: 'notebook'>, <Defect.SOFTWARE: "
-        "'software'>, <Defect.PERIPHERAL: 'peripheral'>])\npriority\n  value is not a valid enumeration member; "
-        "permitted: 'high', 'medium', 'low' (type=type_error.enum; enum_values=[<Priority.HIGH: 'high'>, "
-        "<Priority.MEDIUM: 'medium'>, <Priority.LOW: 'low'>])"
+        "'software', 'peripheral' (type=type_error.enum; enum_values=[<Category.NOTEBOOK: 'notebook'>, "
+        "<Category.SOFTWARE: 'software'>, <Category.PERIPHERAL: 'peripheral'>])\npriority\n  value is not a valid "
+        "enumeration member; permitted: 'high', 'medium', 'low' (type=type_error.enum; enum_values=[<Priority.HIGH: "
+        "'high'>, <Priority.MEDIUM: 'medium'>, <Priority.LOW: 'low'>])"
     )
 
     response = await async_http_client.post('/v1/report-issue/', json=payload)
@@ -161,7 +161,7 @@ async def test_it_should_successfully_issue_list(
     await async_http_client.post('/v1/report-issue/', json=payload_3)
 
     response = await async_http_client.get(
-        f'/v1/issues/?category={Defect.SOFTWARE.value}&priority={Priority.MEDIUM.value}'
+        f'/v1/issues/?category={Category.SOFTWARE.value}&priority={Priority.MEDIUM.value}'
     )
 
     assert response.status_code == 200
@@ -171,10 +171,10 @@ async def test_it_should_successfully_issue_list(
 @pytest.mark.parametrize(
     'category_value, priority_value',
     [
-        (Defect.NOTEBOOK.value, 'dummy_priority'),
+        (Category.NOTEBOOK.value, 'dummy_priority'),
         ('dummy_category', Priority.MEDIUM.value),
         ('dummy_category', 'dummy_priority'),
-        (Defect.NOTEBOOK.value, ''),
+        (Category.NOTEBOOK.value, ''),
         ('', Priority.MEDIUM.value),
         ('', ''),
     ],
@@ -222,7 +222,7 @@ async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_
     await async_http_client.post('/v1/report-issue/', json=payload_2)
     await async_http_client.post('/v1/report-issue/', json=payload_3)
 
-    response = await async_http_client.get(f'/v1/issues/?category={Defect.SOFTWARE.value}')
+    response = await async_http_client.get(f'/v1/issues/?category={Category.SOFTWARE.value}')
 
     assert response.status_code == 200
     assert len(response.json()) == 2

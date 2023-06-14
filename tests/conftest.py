@@ -4,7 +4,7 @@ from httpx import AsyncClient
 
 from src.factory import build_issue
 from src.main import app
-from src.model import Defect
+from src.model import Category
 from src.service import select_priority
 
 
@@ -31,7 +31,7 @@ def payload():
         'user_email': 'user@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.NOTEBOOK.value,
+        'category': Category.NOTEBOOK.value,
         'it_is_not_turning_on': True,
         'power_button_is_not_working': False,
         'screen_is_not_working': False,
@@ -53,7 +53,7 @@ def new_issue(payload):
 @pytest.fixture
 def notebook_check():
     return {
-        'category': Defect.NOTEBOOK.value,
+        'category': Category.NOTEBOOK.value,
         'it_is_not_turning_on': False,
         'power_button_is_not_working': False,
         'screen_is_not_working': False,
@@ -69,7 +69,7 @@ def notebook_check():
 @pytest.fixture
 def software_check():
     return {
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'name': 'Dummy Software',
         'it_is_not_installed_correctly': False,
         'run_with_errors': False,
@@ -87,7 +87,7 @@ def software_check():
 @pytest.fixture
 def peripheral_check():
     return {
-        'category': Defect.PERIPHERAL.value,
+        'category': Category.PERIPHERAL.value,
         'peripheral_type': 'Dummy Peripheral',
         'does_not_connect': False,
         'operating_system_is_not_recognizing': False,

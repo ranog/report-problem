@@ -4,7 +4,7 @@ from enum import Enum
 from pydantic import BaseModel, EmailStr, Field
 
 
-class Defect(str, Enum):
+class Category(str, Enum):
     NOTEBOOK = 'notebook'
     SOFTWARE = 'software'
     PERIPHERAL = 'peripheral'
@@ -28,7 +28,7 @@ class NewIssue(BaseModel):
     user_email: EmailStr
     contact_phone: str
     description: str
-    category: Defect
+    category: Category
     priority: Priority
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: Status = Status.TO_DO

@@ -1,4 +1,4 @@
-from src.model import Defect, NotebookCheck, PeripheralCheck, Priority, SoftwareCheck
+from src.model import Category, NotebookCheck, PeripheralCheck, Priority, SoftwareCheck
 
 
 def _check_notebook(notebook_check: NotebookCheck) -> dict:
@@ -66,13 +66,13 @@ def _check_peripheral(peripheral_check: PeripheralCheck):
 def select_priority(json: dict) -> Priority:
     priorities = {}
     match json.get('category'):
-        case Defect.NOTEBOOK.value:
+        case Category.NOTEBOOK.value:
             notebook_check = NotebookCheck(**json)
             priorities = _check_notebook(notebook_check)
-        case Defect.SOFTWARE.value:
+        case Category.SOFTWARE.value:
             software_check = SoftwareCheck(**json)
             priorities = _check_software(software_check)
-        case Defect.PERIPHERAL.value:
+        case Category.PERIPHERAL.value:
             peripheral_check = PeripheralCheck(**json)
             priorities = _check_peripheral(peripheral_check)
 

@@ -5,7 +5,7 @@ import pytest
 from google.api_core.exceptions import NotFound
 
 from src.factory import build_issue
-from src.model import Defect, Priority, Status
+from src.model import Category, Priority, Status
 from src.repository import COLLECTION_NAME, IssueRepository
 
 
@@ -50,7 +50,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.LOW.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -62,7 +62,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -74,7 +74,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
         'user_email': 'user@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.TO_DO.value,
@@ -85,7 +85,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
-    issues = await repository.list(category=Defect.SOFTWARE.value, priority=Priority.MEDIUM.value)
+    issues = await repository.list(category=Category.SOFTWARE.value, priority=Priority.MEDIUM.value)
 
     assert len(issues) == 2
     assert issues == [payload_2, payload_3]
@@ -96,8 +96,8 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
     [
         ('', Priority.MEDIUM.value),
         ('dummy value for category', Priority.MEDIUM.value),
-        (Defect.NOTEBOOK.value, ''),
-        (Defect.NOTEBOOK.value, 'dummy value for priority'),
+        (Category.NOTEBOOK.value, ''),
+        (Category.NOTEBOOK.value, 'dummy value for priority'),
     ],
 )
 async def test_it_should_return_an_empty_list_when_not_given_the_correct_parameters(
@@ -120,7 +120,7 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.NOTEBOOK.value,
+        'category': Category.NOTEBOOK.value,
         'priority': Priority.LOW.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -132,7 +132,7 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -144,7 +144,7 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
         'user_email': 'user@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.DONE.value,
@@ -155,7 +155,7 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
-    issues = await repository.list(category=Defect.SOFTWARE.value)
+    issues = await repository.list(category=Category.SOFTWARE.value)
 
     assert len(issues) == 2
     assert issues == [payload_2, payload_3]
@@ -169,7 +169,7 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -182,7 +182,7 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
         'user_email': 'user_2@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.MEDIUM.value,
         'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
         'status': Status.TO_DO.value,
@@ -194,7 +194,7 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
         'user_email': 'user@email.com',
         'contact_phone': 'AA 9NNNN-NNNN',
         'description': 'dummy description',
-        'category': Defect.SOFTWARE.value,
+        'category': Category.SOFTWARE.value,
         'priority': Priority.HIGH.value,
         'created_at': str(datetime.now(timezone.utc)),
         'status': Status.DONE.value,
