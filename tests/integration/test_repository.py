@@ -42,8 +42,20 @@ async def test_it_should_return_an_empty_dict_when_the_issue_id_does_not_exist_i
     assert issue == {}
 
 
-async def test_it_should_return_list_of_issues_when_given_correct_parameters(payload, clean_collection):
+async def test_it_should_return_list_of_issues_when_given_correct_parameters(clean_collection):
     await clean_collection(COLLECTION_NAME)
+    payload_1 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.LOW.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'responsible_engineer': 'other_specific@engineer.com',
+    }
     payload_2 = {
         'username': 'dummy name',
         'user_id': '99999999999999',
@@ -69,7 +81,7 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(pay
         'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
-    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_1))
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
@@ -100,8 +112,20 @@ async def test_it_should_return_an_empty_list_when_not_given_the_correct_paramet
     assert issues == []
 
 
-async def test_it_should_return_items_from_the_given_category(payload, clean_collection):
+async def test_it_should_return_items_from_the_given_category(clean_collection):
     await clean_collection(COLLECTION_NAME)
+    payload_1 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
+        'description': 'dummy description',
+        'category': Defect.NOTEBOOK.value,
+        'priority': Priority.LOW.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'responsible_engineer': 'other_specific@engineer.com',
+    }
     payload_2 = {
         'username': 'dummy name',
         'user_id': '99999999999999',
@@ -127,7 +151,7 @@ async def test_it_should_return_items_from_the_given_category(payload, clean_col
         'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
-    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_1))
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
@@ -137,8 +161,21 @@ async def test_it_should_return_items_from_the_given_category(payload, clean_col
     assert issues == [payload_2, payload_3]
 
 
-async def test_it_should_return_items_of_given_priority(payload, clean_collection):
+async def test_it_should_return_items_of_given_priority(clean_collection):
     await clean_collection(COLLECTION_NAME)
+    payload_1 = {
+        'username': 'dummy name',
+        'user_id': '99999999999999',
+        'user_email': 'user_2@email.com',
+        'contact_phone': 'AA 9NNNN-NNNN',
+        'description': 'dummy description',
+        'category': Defect.SOFTWARE.value,
+        'priority': Priority.HIGH.value,
+        'created_at': str(datetime(2022, 1, 31, 10, 0, 0, tzinfo=timezone.utc)),
+        'status': Status.TO_DO.value,
+        'responsible_engineer': 'other_specific@engineer.com',
+    }
+
     payload_2 = {
         'username': 'dummy name',
         'user_id': '99999999999999',
@@ -164,20 +201,20 @@ async def test_it_should_return_items_of_given_priority(payload, clean_collectio
         'responsible_engineer': 'specific@engineer.com',
     }
     repository = IssueRepository()
-    await repository.add(build_issue(payload))
+    await repository.add(build_issue(payload_1))
     await repository.add(build_issue(payload_2))
     await repository.add(build_issue(payload_3))
 
     issues = await repository.list(priority=Priority.HIGH.value)
 
     assert len(issues) == 2
-    assert issues == [payload, payload_3]
+    assert issues == [payload_1, payload_3]
 
 
-async def test_it_should_update_all_fields_provided(payload, clean_collection):
+async def test_it_should_update_all_fields_provided(new_issue, clean_collection):
     await clean_collection(COLLECTION_NAME)
     repository = IssueRepository()
-    issue_id = await repository.add(build_issue(payload))
+    issue_id = await repository.add(new_issue)
     item_to_update = {
         'responsible_engineer': 'email@updated.com',
         'status': Status.IN_PROGRESS.value,

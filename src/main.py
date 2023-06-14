@@ -4,6 +4,7 @@ from pydantic import ValidationError
 
 from src.factory import build_issue
 from src.repository import IssueRepository
+from src.service import select_priority
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -20,6 +21,7 @@ async def root():
 @app.post('/v1/report-issue/')
 async def report_issue(json: dict):
     try:
+        json['priority'] = select_priority(json)
         new_issue = build_issue(json)
     except ValidationError as error:
         return JSONResponse(content=str(error), status_code=400)

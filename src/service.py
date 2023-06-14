@@ -64,7 +64,8 @@ def _check_peripheral(peripheral_check: PeripheralCheck):
 
 
 def select_priority(json: dict) -> Priority:
-    match json['category']:
+    priorities = {}
+    match json.get('category'):
         case Defect.NOTEBOOK.value:
             notebook_check = NotebookCheck(**json)
             priorities = _check_notebook(notebook_check)
@@ -75,9 +76,10 @@ def select_priority(json: dict) -> Priority:
             peripheral_check = PeripheralCheck(**json)
             priorities = _check_peripheral(peripheral_check)
 
-    if any(priorities['high']):
+    if any(priorities.get('high', [])):
         return Priority.HIGH
-    if any(priorities['medium']):
+    if any(priorities.get('medium', [])):
         return Priority.MEDIUM
-    if any(priorities['low']):
+    if any(priorities.get('low', [])):
         return Priority.LOW
+    return ''
