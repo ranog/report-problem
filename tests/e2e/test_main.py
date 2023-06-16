@@ -292,3 +292,36 @@ async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
 
     assert response.status_code == 400
     assert response.json() == 'dummy_field field not exist.'
+
+
+async def test_it_should_return_bad_request_when_no_question_is_answered_for_the_notebook_issue(
+    notebook_payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    response = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+
+    assert response.status_code == 400
+
+
+async def test_it_should_return_bad_request_when_no_question_is_answered_for_the_software_issue(
+    software_payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    response = await async_http_client.post('/v1/report-software-problem/', json=software_payload)
+
+    assert response.status_code == 400
+
+
+async def test_it_should_return_bad_request_when_no_question_is_answered_for_the_peripheral_issue(
+    peripheral_payload,
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+    response = await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
+
+    assert response.status_code == 400
