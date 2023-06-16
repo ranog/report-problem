@@ -1,6 +1,5 @@
 from google.cloud import firestore
-
-from src.model import NewIssue
+from pydantic import BaseModel
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -10,21 +9,14 @@ class IssueRepository:
     def __init__(self):
         self.collection = firestore.AsyncClient().collection(COLLECTION_NAME)
 
-    def _extract_enum_value(self, issue):
-        issue_doc = issue.dict()
-        issue_doc['category'] = issue_doc['category'].value
-        issue_doc['priority'] = issue_doc['priority'].value
-        issue_doc['status'] = issue_doc['status'].value
-        return issue_doc
-
     def _convert_datetime(self, issue):
         issue_doc = issue.to_dict()
         issue_doc['created_at'] = str(issue_doc['created_at'])
         return issue_doc
 
-    async def add(self, issue: NewIssue):
+    async def add(self, issue: BaseModel):
         doc_ref = self.collection.document()
-        await doc_ref.set(self._extract_enum_value(issue))
+        await doc_ref.set(issue.dict())
         return doc_ref.id
 
     async def get(self, issue_id: str):

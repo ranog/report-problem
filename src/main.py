@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from pydantic import ValidationError
 
-from src.factory import build_issue
+from src.model import Notebook, Peripheral, Software
 from src.repository import IssueRepository
 from src.service import select_priority
 
@@ -13,19 +12,27 @@ COLLECTION_NAME = 'testing-report-problem'
 app = FastAPI()
 
 
-@app.get('/v1/ping/')
+@app.get('/v1/ping/', include_in_schema=False)
 async def root():
     return {'ping': 'pong'}
 
 
-@app.post('/v1/report-issue/')
-async def report_issue(json: dict):
-    try:
-        json['priority'] = select_priority(json)
-        new_issue = build_issue(json)
-    except ValidationError as error:
-        return JSONResponse(content=str(error), status_code=400)
-    return await IssueRepository().add(new_issue)
+@app.post('/v1/report-notebook-problem/')
+async def report_notebook_issue(json: Notebook):
+    json.priority = select_priority(json)
+    return await IssueRepository().add(json)
+
+
+@app.post('/v1/report-software-problem/')
+async def report_software_issue(json: Software):
+    json.priority = select_priority(json)
+    return await IssueRepository().add(json)
+
+
+@app.post('/v1/report-peripheral-problem/')
+async def report_peripheral_issue(json: Peripheral):
+    json.priority = select_priority(json)
+    return await IssueRepository().add(json)
 
 
 @app.get('/v1/issue/{issue_id}/')

@@ -1,7 +1,9 @@
-from src.model import Category, NotebookCheck, PeripheralCheck, Priority, SoftwareCheck
+from pydantic import BaseModel
+
+from src.model import Category, Notebook, Peripheral, Priority, Software
 
 
-def _check_notebook(notebook_check: NotebookCheck) -> dict:
+def _check_notebook(notebook_check: Notebook) -> dict:
     high = [
         notebook_check.it_is_not_turning_on,
         notebook_check.power_button_is_not_working,
@@ -21,7 +23,7 @@ def _check_notebook(notebook_check: NotebookCheck) -> dict:
     return {'high': high, 'medium': medium, 'low': low}
 
 
-def _check_software(software_check: SoftwareCheck) -> dict:
+def _check_software(software_check: Software) -> dict:
     high = [
         software_check.it_is_not_installed_correctly,
         software_check.run_with_errors,
@@ -42,7 +44,7 @@ def _check_software(software_check: SoftwareCheck) -> dict:
     return {'high': high, 'medium': medium, 'low': low}
 
 
-def _check_peripheral(peripheral_check: PeripheralCheck):
+def _check_peripheral(peripheral_check: Peripheral):
     high = [
         peripheral_check.does_not_connect,
         peripheral_check.operating_system_is_not_recognizing,
@@ -63,23 +65,24 @@ def _check_peripheral(peripheral_check: PeripheralCheck):
     return {'high': high, 'medium': medium, 'low': low}
 
 
-def select_priority(json: dict) -> Priority:
+def select_priority(json: BaseModel) -> Priority:
     priorities = {}
-    match json.get('category'):
+    doc = json.dict()
+    match doc['category']:
         case Category.NOTEBOOK.value:
-            notebook_check = NotebookCheck(**json)
+            notebook_check = Notebook(**doc)
             priorities = _check_notebook(notebook_check)
         case Category.SOFTWARE.value:
-            software_check = SoftwareCheck(**json)
+            software_check = Software(**doc)
             priorities = _check_software(software_check)
         case Category.PERIPHERAL.value:
-            peripheral_check = PeripheralCheck(**json)
+            peripheral_check = Peripheral(**doc)
             priorities = _check_peripheral(peripheral_check)
 
     if any(priorities.get('high', [])):
-        return Priority.HIGH
+        return Priority.HIGH.value
     if any(priorities.get('medium', [])):
-        return Priority.MEDIUM
+        return Priority.MEDIUM.value
     if any(priorities.get('low', [])):
-        return Priority.LOW
-    return ''
+        return Priority.LOW.value
+    raise ValueError(json)

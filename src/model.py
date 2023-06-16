@@ -22,20 +22,20 @@ class Priority(Enum):
     LOW = 'low'
 
 
-class NewIssue(BaseModel):
+class BasePayload(BaseModel):
     username: str
     user_id: str
     user_email: EmailStr
     contact_phone: str
     description: str
-    category: Category
-    priority: Priority
+    priority: Priority = Priority.HIGH.value
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    status: Status = Status.TO_DO
-    responsible_engineer: EmailStr = ''
+    status: Status = Status.TO_DO.value
+    responsible_engineer: EmailStr = None
 
 
-class NotebookCheck(BaseModel):
+class Notebook(BasePayload, BaseModel):
+    category: Category = Category.NOTEBOOK.value
     # high
     it_is_not_turning_on: bool
     power_button_is_not_working: bool
@@ -52,8 +52,9 @@ class NotebookCheck(BaseModel):
     operating_system_does_not_start_correctly: bool
 
 
-class SoftwareCheck(BaseModel):
-    name: str
+class Software(BasePayload, BaseModel):
+    software_name: str
+    category: Category = Category.SOFTWARE.value
 
     # high
     it_is_not_installed_correctly: bool
@@ -72,8 +73,9 @@ class SoftwareCheck(BaseModel):
     other_users_are_having_the_same_problem: bool
 
 
-class PeripheralCheck(BaseModel):
+class Peripheral(BasePayload, BaseModel):
     peripheral_type: str
+    category: Category = Category.PERIPHERAL.value
 
     # high
     does_not_connect: bool
