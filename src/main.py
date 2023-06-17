@@ -17,7 +17,7 @@ async def root():
     return {'ping': 'pong'}
 
 
-@app.post('/v1/report-notebook-problem/')
+@app.post('/v1/report-notebook-issue/')
 async def report_notebook_issue(json: Notebook):
     try:
         json.priority = select_priority(json)
@@ -26,7 +26,7 @@ async def report_notebook_issue(json: Notebook):
     return await IssueRepository().add(json)
 
 
-@app.post('/v1/report-software-problem/')
+@app.post('/v1/report-software-issue/')
 async def report_software_issue(json: Software):
     try:
         json.priority = select_priority(json)
@@ -35,7 +35,7 @@ async def report_software_issue(json: Software):
     return await IssueRepository().add(json)
 
 
-@app.post('/v1/report-peripheral-problem/')
+@app.post('/v1/report-peripheral-issue/')
 async def report_peripheral_issue(json: Peripheral):
     try:
         json.priority = select_priority(json)

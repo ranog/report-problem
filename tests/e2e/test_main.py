@@ -18,7 +18,7 @@ async def test_it_should_successfully_create_a_new_notebook_problem(
     await clean_collection(COLLECTION_NAME)
     notebook_payload['it_is_not_turning_on'] = True
 
-    response = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+    response = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
 
     assert response.status_code == 200
 
@@ -29,7 +29,7 @@ async def test_it_should_successfully_create_a_new_software_problem(
     await clean_collection(COLLECTION_NAME)
     software_payload['it_is_not_installed_correctly'] = True
 
-    response = await async_http_client.post('/v1/report-software-problem/', json=software_payload)
+    response = await async_http_client.post('/v1/report-software-issue/', json=software_payload)
 
     assert response.status_code == 200
 
@@ -40,7 +40,7 @@ async def test_it_should_successfully_create_a_new_peripheral_problem(
     await clean_collection(COLLECTION_NAME)
     peripheral_payload['does_not_connect'] = True
 
-    response = await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
+    response = await async_http_client.post('/v1/report-peripheral-issue/', json=peripheral_payload)
 
     assert response.status_code == 200
 
@@ -52,7 +52,7 @@ async def test_it_should_return_status_code_422_when_the_new_notebook_problem_is
 ):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.post('/v1/report-notebook-problem/', json={})
+    response = await async_http_client.post('/v1/report-notebook-issue/', json={})
 
     assert response.status_code == 422
     assert response.json() == notebook_error_message
@@ -65,7 +65,7 @@ async def test_it_should_return_status_code_422_when_the_new_software_problem_is
 ):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.post('/v1/report-software-problem/', json={})
+    response = await async_http_client.post('/v1/report-software-issue/', json={})
 
     assert response.status_code == 422
     assert response.json() == software_error_message
@@ -78,7 +78,7 @@ async def test_it_should_return_status_code_422_when_the_new_peripheral_problem_
 ):
     await clean_collection(COLLECTION_NAME)
 
-    response = await async_http_client.post('/v1/report-peripheral-problem/', json={})
+    response = await async_http_client.post('/v1/report-peripheral-issue/', json={})
 
     assert response.status_code == 422
     assert response.json() == peripheral_error_message
@@ -87,7 +87,7 @@ async def test_it_should_return_status_code_422_when_the_new_peripheral_problem_
 async def test_it_should_successfully_get_issue(notebook_payload, clean_collection, async_http_client: AsyncClient):
     await clean_collection(COLLECTION_NAME)
     notebook_payload['it_is_not_turning_on'] = True
-    issue_info = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+    issue_info = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
 
     response = await async_http_client.get(f'/v1/issue/{issue_info.json()}/')
 
@@ -129,9 +129,9 @@ async def test_it_should_successfully_issue_list(
     other_software_payload['not_displaying_data_and_content_correctly'] = True
     software_payload['generates_unexpected_results'] = True
 
-    await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=software_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=other_software_payload)
+    await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=software_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=other_software_payload)
 
     response = await async_http_client.get(
         f'/v1/issues/?category={Category.SOFTWARE.value}&priority={Priority.MEDIUM.value}'
@@ -179,9 +179,9 @@ async def test_it_should_return_the_calls_of_the_category_provided_in_the_query_
     software_payload['it_is_not_installed_correctly'] = True
     other_software_payload['other_users_are_having_the_same_problem'] = True
     notebook_payload['power_button_is_not_working'] = True
-    await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=software_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=other_software_payload)
+    await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=software_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=other_software_payload)
 
     response = await async_http_client.get(f'/v1/issues/?category={Category.SOFTWARE.value}')
 
@@ -200,9 +200,9 @@ async def test_it_should_return_the_calls_of_the_priority_provided_in_the_query_
     notebook_payload['it_is_not_turning_on'] = True
     software_payload['it_is_not_installed_correctly'] = True
     peripheral_payload['does_not_connect'] = True
-    await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=software_payload)
-    await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
+    await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=software_payload)
+    await async_http_client.post('/v1/report-peripheral-issue/', json=peripheral_payload)
 
     response = await async_http_client.get(f'/v1/issues/?priority={Priority.HIGH.value}')
 
@@ -221,9 +221,9 @@ async def test_it_should_return_all_alerts_when_no_query_parameter_is_passed(
     notebook_payload['it_is_not_turning_on'] = True
     software_payload['not_integrating_with_other_systems_or_devices'] = True
     peripheral_payload['does_not_maintain_data_security_and_protection'] = True
-    await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
-    await async_http_client.post('/v1/report-software-problem/', json=software_payload)
-    await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
+    await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
+    await async_http_client.post('/v1/report-software-issue/', json=software_payload)
+    await async_http_client.post('/v1/report-peripheral-issue/', json=peripheral_payload)
 
     response = await async_http_client.get('/v1/issues/')
 
@@ -238,7 +238,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
 ):
     await clean_collection(COLLECTION_NAME)
     notebook_payload['it_is_not_turning_on'] = True
-    issue_post_response = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+    issue_post_response = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
     issue_id = issue_post_response.json()
     items = {
         'responsible_engineer': 'email@updated.com',
@@ -280,7 +280,7 @@ async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
 ):
     await clean_collection(COLLECTION_NAME)
     notebook_payload['it_is_not_turning_on'] = True
-    issue_doc = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+    issue_doc = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
     issue_id = issue_doc.json()
     items = {
         'responsible_engineer': 'email@updated.com',
@@ -300,7 +300,7 @@ async def test_it_should_return_bad_request_when_no_question_is_answered_for_the
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-    response = await async_http_client.post('/v1/report-notebook-problem/', json=notebook_payload)
+    response = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
 
     assert response.status_code == 400
 
@@ -311,7 +311,7 @@ async def test_it_should_return_bad_request_when_no_question_is_answered_for_the
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-    response = await async_http_client.post('/v1/report-software-problem/', json=software_payload)
+    response = await async_http_client.post('/v1/report-software-issue/', json=software_payload)
 
     assert response.status_code == 400
 
@@ -322,7 +322,7 @@ async def test_it_should_return_bad_request_when_no_question_is_answered_for_the
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-    response = await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
+    response = await async_http_client.post('/v1/report-peripheral-issue/', json=peripheral_payload)
 
     assert response.status_code == 400
 
