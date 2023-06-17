@@ -66,8 +66,8 @@ async def update_issue(issue_id: str, items: dict):
     return await repository.update(issue_id=issue_id, items=items)
 
 
-@app.get('/v1/docs/{category}/')
-async def get_docs(category: str):
+@app.get('/v1/payloads/{category}/')
+async def payload(category: str):
     match category:
         case Category.NOTEBOOK.value:
             notebook = Notebook.schema()

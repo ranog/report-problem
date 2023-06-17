@@ -332,9 +332,6 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-
-    response = await async_http_client.get('/v1/docs/notebook/')
-
     expected_result = {
         'username': 'string',
         'user_id': 'string',
@@ -352,6 +349,8 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
         'operating_system_does_not_start_correctly': 'boolean',
     }
 
+    response = await async_http_client.get('/v1/payloads/notebook/')
+
     assert response.status_code == 200
     assert response.json() == expected_result
 
@@ -361,9 +360,6 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-
-    response = await async_http_client.get('/v1/docs/software/')
-
     expected_result = {
         'username': 'string',
         'user_id': 'string',
@@ -383,6 +379,8 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
         'other_users_are_having_the_same_problem': 'boolean',
     }
 
+    response = await async_http_client.get('/v1/payloads/software/')
+
     assert response.status_code == 200
     assert response.json() == expected_result
 
@@ -392,9 +390,6 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
     async_http_client: AsyncClient,
 ):
     await clean_collection(COLLECTION_NAME)
-
-    response = await async_http_client.get('/v1/docs/peripheral/')
-
     expected_result = {
         'username': 'string',
         'user_id': 'string',
@@ -414,6 +409,8 @@ async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_
         'does_not_maintain_data_security_and_protection': 'boolean',
     }
 
+    response = await async_http_client.get('/v1/payloads/peripheral/')
+
     assert response.status_code == 200
     assert response.json() == expected_result
 
@@ -426,7 +423,7 @@ async def test_it_should_return_not_found_when_category_is_not_valid(clean_colle
         f'{Category.NOTEBOOK.value}, {Category.SOFTWARE.value} and {Category.PERIPHERAL.value}'
     )
 
-    response = await async_http_client.get(f'/v1/docs/{category}/')
+    response = await async_http_client.get(f'/v1/payloads/{category}/')
 
     assert response.status_code == 400
     assert response.json() == expected_msg
