@@ -325,3 +325,108 @@ async def test_it_should_return_bad_request_when_no_question_is_answered_for_the
     response = await async_http_client.post('/v1/report-peripheral-problem/', json=peripheral_payload)
 
     assert response.status_code == 400
+
+
+async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_notebook_problems(
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+
+    response = await async_http_client.get('/v1/docs/notebook/')
+
+    expected_result = {
+        'username': 'string',
+        'user_id': 'string',
+        'user_email': 'string',
+        'contact_phone': 'string',
+        'description': 'string',
+        'it_is_not_turning_on': 'boolean',
+        'power_button_is_not_working': 'boolean',
+        'screen_is_not_working': 'boolean',
+        'keyboard_is_not_working': 'boolean',
+        'touchpad_is_not_working': 'boolean',
+        'not_connecting_to_the_internet': 'boolean',
+        'displays_error_message': 'boolean',
+        'does_not_recognize_peripherals': 'boolean',
+        'operating_system_does_not_start_correctly': 'boolean',
+    }
+
+    assert response.status_code == 200
+    assert response.json() == expected_result
+
+
+async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_software_problems(
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+
+    response = await async_http_client.get('/v1/docs/software/')
+
+    expected_result = {
+        'username': 'string',
+        'user_id': 'string',
+        'user_email': 'string',
+        'contact_phone': 'string',
+        'description': 'string',
+        'software_name': 'string',
+        'it_is_not_installed_correctly': 'boolean',
+        'run_with_errors': 'boolean',
+        'does_not_respond_to_commands_and_interactions': 'boolean',
+        'not_displaying_data_and_content_correctly': 'boolean',
+        'generates_unexpected_results': 'boolean',
+        'not_integrating_with_other_systems_or_devices': 'boolean',
+        'not_using_required_system_resources': 'boolean',
+        'not_maintaining_security_and_not_protecting_data': 'boolean',
+        'it_is_not_updated_with_the_latest_versions': 'boolean',
+        'other_users_are_having_the_same_problem': 'boolean',
+    }
+
+    assert response.status_code == 200
+    assert response.json() == expected_result
+
+
+async def test_it_should_return_the_necessary_parameters_to_open_the_ticket_for_peripheral_problems(
+    clean_collection,
+    async_http_client: AsyncClient,
+):
+    await clean_collection(COLLECTION_NAME)
+
+    response = await async_http_client.get('/v1/docs/peripheral/')
+
+    expected_result = {
+        'username': 'string',
+        'user_id': 'string',
+        'user_email': 'string',
+        'contact_phone': 'string',
+        'description': 'string',
+        'peripheral_type': 'string',
+        'does_not_connect': 'boolean',
+        'operating_system_is_not_recognizing': 'boolean',
+        'does_not_work_without_displaying_errors_or_failure_messages': 'boolean',
+        'does_not_respond_to_commands': 'boolean',
+        'does_not_perform_its_main_functions': 'boolean',
+        'does_not_integrate_with_other_devices_or_components': 'boolean',
+        'does_not_receive_power_or_is_not_turned_on': 'boolean',
+        'is_not_up_to_date_with_the_latest_versions_of_drivers_or_firmware': 'boolean',
+        'other_users_are_using_the_same_peripheral_and_are_having_the_same_problem': 'boolean',
+        'does_not_maintain_data_security_and_protection': 'boolean',
+    }
+
+    assert response.status_code == 200
+    assert response.json() == expected_result
+
+
+async def test_it_should_return_not_found_when_category_is_not_valid(clean_collection, async_http_client: AsyncClient):
+    await clean_collection(COLLECTION_NAME)
+    category = 'dummy_category'
+    expected_msg = (
+        f'{category} not found. Categories with available payload: '
+        f'{Category.NOTEBOOK.value}, {Category.SOFTWARE.value} and {Category.PERIPHERAL.value}'
+    )
+
+    response = await async_http_client.get(f'/v1/docs/{category}/')
+
+    assert response.status_code == 400
+    assert response.json() == expected_msg

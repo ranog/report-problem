@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from src.model import Notebook, Peripheral, Software
+from src.model import Category, Notebook, Peripheral, Software
 from src.repository import IssueRepository
 from src.service import select_priority
 
@@ -64,3 +64,24 @@ async def update_issue(issue_id: str, items: dict):
         if item not in issue_doc:
             return JSONResponse(content=f'{item} field not exist.', status_code=400)
     return await repository.update(issue_id=issue_id, items=items)
+
+
+@app.get('/v1/docs/{category}/')
+async def get_docs(category: str):
+    match category:
+        case Category.NOTEBOOK.value:
+            notebook = Notebook.schema()
+            return {key: notebook['properties'][key]['type'] for key in notebook['required']}
+        case Category.SOFTWARE.value:
+            software = Software.schema()
+            return {key: software['properties'][key]['type'] for key in software['required']}
+        case Category.PERIPHERAL.value:
+            peripheral = Peripheral.schema()
+            return {key: peripheral['properties'][key]['type'] for key in peripheral['required']}
+    return JSONResponse(
+        content=(
+            f'{category} not found. Categories with available payload: '
+            f'{Category.NOTEBOOK.value}, {Category.SOFTWARE.value} and {Category.PERIPHERAL.value}'
+        ),
+        status_code=400,
+    )
