@@ -66,18 +66,13 @@ def _check_peripheral(peripheral_check: Peripheral):
 
 
 def select_priority(json: BaseModel) -> Priority:
-    priorities = {}
-    doc = json.dict()
-    match doc['category']:
+    match json.category:
         case Category.NOTEBOOK.value:
-            notebook_check = Notebook(**doc)
-            priorities = _check_notebook(notebook_check)
+            priorities = _check_notebook(json)
         case Category.SOFTWARE.value:
-            software_check = Software(**doc)
-            priorities = _check_software(software_check)
+            priorities = _check_software(json)
         case Category.PERIPHERAL.value:
-            peripheral_check = Peripheral(**doc)
-            priorities = _check_peripheral(peripheral_check)
+            priorities = _check_peripheral(json)
 
     if any(priorities.get('high', [])):
         return Priority.HIGH.value
