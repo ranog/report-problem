@@ -87,7 +87,8 @@ def peripheral_payload():
 @pytest.fixture
 def notebook_error_message():
     return {
-        'detail': [
+        'detail': 'Validation error',
+        'errors': [
             {'loc': ['body', 'username'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_id'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_email'], 'msg': 'field required', 'type': 'value_error.missing'},
@@ -106,14 +107,16 @@ def notebook_error_message():
                 'msg': 'field required',
                 'type': 'value_error.missing',
             },
-        ]
+            {'loc': ['body', '__root__'], 'msg': 'Form has not been filled out', 'type': 'value_error'},
+        ],
     }
 
 
 @pytest.fixture
 def software_error_message():
     return {
-        'detail': [
+        'detail': 'Validation error',
+        'errors': [
             {'loc': ['body', 'username'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_id'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_email'], 'msg': 'field required', 'type': 'value_error.missing'},
@@ -158,14 +161,16 @@ def software_error_message():
                 'msg': 'field required',
                 'type': 'value_error.missing',
             },
-        ]
+            {'loc': ['body', '__root__'], 'msg': 'Form has not been filled out', 'type': 'value_error'},
+        ],
     }
 
 
 @pytest.fixture
 def peripheral_error_message():
     return {
-        'detail': [
+        'detail': 'Validation error',
+        'errors': [
             {'loc': ['body', 'username'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_id'], 'msg': 'field required', 'type': 'value_error.missing'},
             {'loc': ['body', 'user_email'], 'msg': 'field required', 'type': 'value_error.missing'},
@@ -214,5 +219,6 @@ def peripheral_error_message():
                 'msg': 'field required',
                 'type': 'value_error.missing',
             },
-        ]
+            {'loc': ['body', '__root__'], 'msg': 'Form has not been filled out', 'type': 'value_error'},
+        ],
     }

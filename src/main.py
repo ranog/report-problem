@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from src.model import Category, Notebook, Peripheral, Software
@@ -12,6 +13,11 @@ COLLECTION_NAME = 'testing-report-problem'
 app = FastAPI()
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(status_code=400, content={'detail': 'Validation error', 'errors': exc.errors()})
+
+
 @app.get('/v1/ping/', include_in_schema=False)
 async def root():
     return {'ping': 'pong'}
@@ -19,28 +25,19 @@ async def root():
 
 @app.post('/v1/report-notebook-issue/')
 async def report_notebook_issue(notebook: Notebook):
-    try:
-        notebook.priority = select_priority(notebook)
-    except ValueError as error:
-        return JSONResponse(content=str(error), status_code=400)
+    notebook.priority = select_priority(notebook)
     return await IssueRepository().add(notebook)
 
 
 @app.post('/v1/report-software-issue/')
 async def report_software_issue(software: Software):
-    try:
-        software.priority = select_priority(software)
-    except ValueError as error:
-        return JSONResponse(content=str(error), status_code=400)
+    software.priority = select_priority(software)
     return await IssueRepository().add(software)
 
 
 @app.post('/v1/report-peripheral-issue/')
 async def report_peripheral_issue(peripheral: Peripheral):
-    try:
-        peripheral.priority = select_priority(peripheral)
-    except ValueError as error:
-        return JSONResponse(content=str(error), status_code=400)
+    peripheral.priority = select_priority(peripheral)
     return await IssueRepository().add(peripheral)
 
 

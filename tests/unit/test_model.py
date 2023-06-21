@@ -14,7 +14,7 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_notebook_is_
             description='dummy description',
         )
     expected_msg = (
-        '9 validation errors for Notebook\n'
+        '10 validation errors for Notebook\n'
         'it_is_not_turning_on\n'
         '  field required (type=value_error.missing)\n'
         'power_button_is_not_working\n'
@@ -32,7 +32,9 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_notebook_is_
         'does_not_recognize_peripherals\n'
         '  field required (type=value_error.missing)\n'
         'operating_system_does_not_start_correctly\n'
-        '  field required (type=value_error.missing)'
+        '  field required (type=value_error.missing)\n'
+        '__root__\n'
+        '  Form has not been filled out (type=value_error)'
     )
     assert str(error.value) == expected_msg
 
@@ -47,7 +49,7 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_software_is_
             description='dummy description',
         )
     expected_msg = (
-        '11 validation errors for Software\n'
+        '12 validation errors for Software\n'
         'software_name\n'
         '  field required (type=value_error.missing)\n'
         'it_is_not_installed_correctly\n'
@@ -69,7 +71,9 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_software_is_
         'it_is_not_updated_with_the_latest_versions\n'
         '  field required (type=value_error.missing)\n'
         'other_users_are_having_the_same_problem\n'
-        '  field required (type=value_error.missing)'
+        '  field required (type=value_error.missing)\n'
+        '__root__\n'
+        '  Form has not been filled out (type=value_error)'
     )
     assert str(error.value) == expected_msg
 
@@ -84,7 +88,7 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_peripheral_i
             description='dummy description',
         )
     expected_msg = (
-        '11 validation errors for Peripheral\n'
+        '12 validation errors for Peripheral\n'
         'peripheral_type\n'
         '  field required (type=value_error.missing)\n'
         'does_not_connect\n'
@@ -106,18 +110,22 @@ def test_it_should_raise_exception_when_data_to_report_problem_with_peripheral_i
         'other_users_are_using_the_same_peripheral_and_are_having_the_same_problem\n'
         '  field required (type=value_error.missing)\n'
         'does_not_maintain_data_security_and_protection\n'
-        '  field required (type=value_error.missing)'
+        '  field required (type=value_error.missing)\n'
+        '__root__\n'
+        '  Form has not been filled out (type=value_error)'
     )
     assert str(error.value) == expected_msg
 
 
 def test_email_field_should_have_a_valid_form(notebook_payload):
+    notebook_payload['it_is_not_turning_on'] = True
     issue = Notebook(**notebook_payload)
     assert issue.user_email == 'user@email.com'
 
 
 @pytest.mark.parametrize('email_value', ['', 'dummy email'])
 def test_email_field_must_have_an_email_in_valid_format(email_value, notebook_payload):
+    notebook_payload['it_is_not_turning_on'] = True
     notebook_payload['user_email'] = email_value
     with pytest.raises(ValueError) as error:
         Notebook(**notebook_payload)
@@ -131,5 +139,6 @@ def test_email_field_must_have_an_email_in_valid_format(email_value, notebook_pa
 
 
 def test_owner_field_should_be_created_none(notebook_payload):
+    notebook_payload['it_is_not_turning_on'] = True
     issue = Notebook(**notebook_payload)
     assert issue.responsible_engineer is None

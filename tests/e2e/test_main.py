@@ -45,7 +45,7 @@ async def test_it_should_successfully_create_a_new_peripheral_problem(
     assert response.status_code == 200
 
 
-async def test_it_should_return_status_code_422_when_the_new_notebook_problem_is_empty(
+async def test_it_should_return_status_code_400_when_the_new_notebook_problem_is_empty(
     notebook_error_message,
     clean_collection,
     async_http_client: AsyncClient,
@@ -54,11 +54,11 @@ async def test_it_should_return_status_code_422_when_the_new_notebook_problem_is
 
     response = await async_http_client.post('/v1/report-notebook-issue/', json={})
 
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert response.json() == notebook_error_message
 
 
-async def test_it_should_return_status_code_422_when_the_new_software_problem_is_empty(
+async def test_it_should_return_status_code_400_when_the_new_software_problem_is_empty(
     software_error_message,
     clean_collection,
     async_http_client: AsyncClient,
@@ -67,11 +67,11 @@ async def test_it_should_return_status_code_422_when_the_new_software_problem_is
 
     response = await async_http_client.post('/v1/report-software-issue/', json={})
 
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert response.json() == software_error_message
 
 
-async def test_it_should_return_status_code_422_when_the_new_peripheral_problem_is_empty(
+async def test_it_should_return_status_code_400_when_the_new_peripheral_problem_is_empty(
     peripheral_error_message,
     clean_collection,
     async_http_client: AsyncClient,
@@ -80,7 +80,7 @@ async def test_it_should_return_status_code_422_when_the_new_peripheral_problem_
 
     response = await async_http_client.post('/v1/report-peripheral-issue/', json={})
 
-    assert response.status_code == 422
+    assert response.status_code == 400
     assert response.json() == peripheral_error_message
 
 

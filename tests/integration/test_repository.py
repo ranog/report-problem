@@ -10,6 +10,7 @@ from src.service import select_priority
 
 async def test_it_should_persist_in_the_repository(clean_collection, notebook_payload):
     await clean_collection(COLLECTION_NAME)
+    notebook_payload['it_is_not_turning_on'] = True
     new_issue = Notebook(**notebook_payload)
     issue_repository = IssueRepository()
     issue_id = await issue_repository.add(new_issue)
@@ -21,6 +22,7 @@ async def test_it_should_persist_in_the_repository(clean_collection, notebook_pa
 
 async def test_it_should_add_two_new_issues_but_ids_should_be_different(clean_collection, notebook_payload):
     await clean_collection(COLLECTION_NAME)
+    notebook_payload['it_is_not_turning_on'] = True
     new_issue = Notebook(**notebook_payload)
     issue_repository = IssueRepository()
     await issue_repository.add(new_issue)
@@ -289,6 +291,7 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
 
 async def test_it_should_update_all_fields_provided(notebook_payload, clean_collection):
     await clean_collection(COLLECTION_NAME)
+    notebook_payload['it_is_not_turning_on'] = True
     new_issue = Notebook(**notebook_payload)
     repository = IssueRepository()
     issue_id = await repository.add(new_issue)
