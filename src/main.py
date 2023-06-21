@@ -18,30 +18,30 @@ async def root():
 
 
 @app.post('/v1/report-notebook-issue/')
-async def report_notebook_issue(json: Notebook):
+async def report_notebook_issue(notebook: Notebook):
     try:
-        json.priority = select_priority(json)
+        notebook.priority = select_priority(notebook)
     except ValueError as error:
         return JSONResponse(content=str(error), status_code=400)
-    return await IssueRepository().add(json)
+    return await IssueRepository().add(notebook)
 
 
 @app.post('/v1/report-software-issue/')
-async def report_software_issue(json: Software):
+async def report_software_issue(software: Software):
     try:
-        json.priority = select_priority(json)
+        software.priority = select_priority(software)
     except ValueError as error:
         return JSONResponse(content=str(error), status_code=400)
-    return await IssueRepository().add(json)
+    return await IssueRepository().add(software)
 
 
 @app.post('/v1/report-peripheral-issue/')
-async def report_peripheral_issue(json: Peripheral):
+async def report_peripheral_issue(peripheral: Peripheral):
     try:
-        json.priority = select_priority(json)
+        peripheral.priority = select_priority(peripheral)
     except ValueError as error:
         return JSONResponse(content=str(error), status_code=400)
-    return await IssueRepository().add(json)
+    return await IssueRepository().add(peripheral)
 
 
 @app.get('/v1/issue/{issue_id}/')

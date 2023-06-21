@@ -65,14 +65,14 @@ def _check_peripheral(peripheral_check: Peripheral):
     return {'high': high, 'medium': medium, 'low': low}
 
 
-def select_priority(json: BaseModel) -> Priority:
-    match json.category:
+def select_priority(any_base_model: BaseModel) -> Priority:
+    match any_base_model.category:
         case Category.NOTEBOOK.value:
-            priorities = _check_notebook(json)
+            priorities = _check_notebook(any_base_model)
         case Category.SOFTWARE.value:
-            priorities = _check_software(json)
+            priorities = _check_software(any_base_model)
         case Category.PERIPHERAL.value:
-            priorities = _check_peripheral(json)
+            priorities = _check_peripheral(any_base_model)
 
     if any(priorities.get('high', [])):
         return Priority.HIGH.value
@@ -80,4 +80,4 @@ def select_priority(json: BaseModel) -> Priority:
         return Priority.MEDIUM.value
     if any(priorities.get('low', [])):
         return Priority.LOW.value
-    raise ValueError(json)
+    raise ValueError(any_base_model)
