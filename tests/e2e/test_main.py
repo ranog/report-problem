@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from src.model import Category, Priority, Status
+from src.models.base_payload import Category, Priority, Status
 from src.repository import COLLECTION_NAME
 
 

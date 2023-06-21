@@ -1,7 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from src.model import Notebook, Peripheral, Software
+from src.models.notebook import Notebook
+from src.models.peripheral import Peripheral
+from src.models.software import Software
 
 
 def test_it_should_raise_exception_when_data_to_report_problem_with_notebook_is_incomplete():

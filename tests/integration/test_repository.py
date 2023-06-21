@@ -3,7 +3,10 @@ import os
 import pytest
 from google.api_core.exceptions import NotFound
 
-from src.model import Category, Notebook, Peripheral, Priority, Software, Status
+from src.models.base_payload import Category, Priority, Status
+from src.models.notebook import Notebook
+from src.models.peripheral import Peripheral
+from src.models.software import Software
 from src.repository import COLLECTION_NAME, IssueRepository
 
 

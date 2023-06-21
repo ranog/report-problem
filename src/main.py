@@ -2,7 +2,10 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from src.model import Category, Notebook, Peripheral, Software
+from src.models.base_payload import Category
+from src.models.notebook import Notebook
+from src.models.peripheral import Peripheral
+from src.models.software import Software
 from src.repository import IssueRepository
 
 

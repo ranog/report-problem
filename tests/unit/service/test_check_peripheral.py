@@ -1,4 +1,5 @@
-from src.model import Peripheral, Priority
+from src.models.base_payload import Priority
+from src.models.peripheral import Peripheral
 
 
 def test_it_should_return_high_priority_when_not_connecting(peripheral_payload):

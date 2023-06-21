@@ -1,4 +1,5 @@
-from src.model import Notebook, Priority
+from src.models.base_payload import Priority
+from src.models.notebook import Notebook
 
 
 def test_it_should_return_high_priority_when_notebook_will_not_turn_on(notebook_payload):
