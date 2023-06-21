@@ -16,7 +16,7 @@ class Status(str, Enum):
     DONE = 'done'
 
 
-class Priority(Enum):
+class Priority(str, Enum):
     HIGH = 'high'
     MEDIUM = 'medium'
     LOW = 'low'
@@ -28,13 +28,13 @@ class BasePayload(BaseModel):
     user_email: EmailStr
     contact_phone: str
     description: str
-    priority: Priority = Priority.HIGH.value
+    priority: Priority = Priority.HIGH
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    status: Status = Status.TO_DO.value
+    status: Status = Status.TO_DO
     responsible_engineer: EmailStr = None
 
 
-class Notebook(BasePayload, BaseModel):
+class Notebook(BasePayload):
     category: Category = Category.NOTEBOOK.value
     # high
     it_is_not_turning_on: bool
@@ -52,7 +52,7 @@ class Notebook(BasePayload, BaseModel):
     operating_system_does_not_start_correctly: bool
 
 
-class Software(BasePayload, BaseModel):
+class Software(BasePayload):
     software_name: str
     category: Category = Category.SOFTWARE.value
 
@@ -73,7 +73,7 @@ class Software(BasePayload, BaseModel):
     other_users_are_having_the_same_problem: bool
 
 
-class Peripheral(BasePayload, BaseModel):
+class Peripheral(BasePayload):
     peripheral_type: str
     category: Category = Category.PERIPHERAL.value
 
