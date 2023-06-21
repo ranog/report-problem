@@ -242,8 +242,8 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
     issue_id = issue_post_response.json()
     items = {
         'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS.value,
-        'priority': Priority.LOW.value,
+        'status': Status.IN_PROGRESS,
+        'priority': Priority.LOW,
     }
 
     response = await async_http_client.patch(f'/v1/update-issue/{issue_id}/', json=items)
@@ -263,8 +263,8 @@ async def test_it_should_return_not_found_when_issue_id_is_not_valid(
     await clean_collection(COLLECTION_NAME)
     items = {
         'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS.value,
-        'priority': Priority.LOW.value,
+        'status': Status.IN_PROGRESS,
+        'priority': Priority.LOW,
     }
 
     response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)

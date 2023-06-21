@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 
 from src.model import Category, Notebook, Peripheral, Software
 from src.repository import IssueRepository
-from src.service import select_priority
 
 
 COLLECTION_NAME = 'testing-report-problem'
@@ -25,19 +24,19 @@ async def root():
 
 @app.post('/v1/report-notebook-issue/')
 async def report_notebook_issue(notebook: Notebook):
-    notebook.priority = select_priority(notebook)
+    notebook.select_priority()
     return await IssueRepository().add(notebook)
 
 
 @app.post('/v1/report-software-issue/')
 async def report_software_issue(software: Software):
-    software.priority = select_priority(software)
+    software.select_priority()
     return await IssueRepository().add(software)
 
 
 @app.post('/v1/report-peripheral-issue/')
 async def report_peripheral_issue(peripheral: Peripheral):
-    peripheral.priority = select_priority(peripheral)
+    peripheral.select_priority()
     return await IssueRepository().add(peripheral)
 
 

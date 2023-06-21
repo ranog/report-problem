@@ -5,7 +5,6 @@ from google.api_core.exceptions import NotFound
 
 from src.model import Category, Notebook, Peripheral, Priority, Software, Status
 from src.repository import COLLECTION_NAME, IssueRepository
-from src.service import select_priority
 
 
 async def test_it_should_persist_in_the_repository(clean_collection, notebook_payload):
@@ -101,9 +100,9 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
     software_problem_1 = Software(**payload_1)
     software_problem_2 = Software(**payload_2)
     software_problem_3 = Software(**payload_3)
-    software_problem_1.priority = select_priority(software_problem_1)
-    software_problem_2.priority = select_priority(software_problem_2)
-    software_problem_3.priority = select_priority(software_problem_3)
+    software_problem_1.select_priority()
+    software_problem_2.select_priority()
+    software_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(software_problem_1)
@@ -197,9 +196,9 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
     notebook_problem_1 = Notebook(**payload_1)
     software_problem_2 = Software(**payload_2)
     software_problem_3 = Software(**payload_3)
-    notebook_problem_1.priority = select_priority(notebook_problem_1)
-    software_problem_2.priority = select_priority(software_problem_2)
-    software_problem_3.priority = select_priority(software_problem_3)
+    notebook_problem_1.select_priority()
+    software_problem_2.select_priority()
+    software_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(notebook_problem_1)
@@ -272,9 +271,9 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
     notebook_problem_1 = Notebook(**payload_1)
     software_problem_2 = Software(**payload_2)
     peripheral_problem_3 = Peripheral(**payload_3)
-    notebook_problem_1.priority = select_priority(notebook_problem_1)
-    software_problem_2.priority = select_priority(software_problem_2)
-    peripheral_problem_3.priority = select_priority(peripheral_problem_3)
+    notebook_problem_1.select_priority()
+    software_problem_2.select_priority()
+    peripheral_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(notebook_problem_1)
@@ -297,8 +296,8 @@ async def test_it_should_update_all_fields_provided(notebook_payload, clean_coll
     issue_id = await repository.add(new_issue)
     item_to_update = {
         'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS.value,
-        'priority': Priority.LOW.value,
+        'status': Status.IN_PROGRESS,
+        'priority': Priority.LOW,
     }
 
     await repository.update(issue_id=issue_id, items=item_to_update)
