@@ -32,29 +32,30 @@ class Peripheral(BasePayload):
             values.get('does_not_maintain_data_security_and_protection'),
         ]
         if any(form_has_been_completed):
-            return values
+            return cls._select_priority(values)
         raise ValueError('Form has not been filled out')
 
-    def select_priority(self):
+    @classmethod
+    def _select_priority(cls, values):
         priorities = {
             Priority.HIGH: [
-                self.does_not_connect,
-                self.operating_system_is_not_recognizing,
-                self.does_not_work_without_displaying_errors_or_failure_messages,
+                values['does_not_connect'],
+                values['operating_system_is_not_recognizing'],
+                values['does_not_work_without_displaying_errors_or_failure_messages'],
             ],
             Priority.MEDIUM: [
-                self.does_not_respond_to_commands,
-                self.does_not_perform_its_main_functions,
-                self.does_not_integrate_with_other_devices_or_components,
+                values['does_not_respond_to_commands'],
+                values['does_not_perform_its_main_functions'],
+                values['does_not_integrate_with_other_devices_or_components'],
             ],
             Priority.LOW: [
-                self.does_not_receive_power_or_is_not_turned_on,
-                self.is_not_up_to_date_with_the_latest_versions_of_drivers_or_firmware,
-                self.other_users_are_using_the_same_peripheral_and_are_having_the_same_problem,
-                self.does_not_maintain_data_security_and_protection,
+                values['does_not_receive_power_or_is_not_turned_on'],
+                values['is_not_up_to_date_with_the_latest_versions_of_drivers_or_firmware'],
+                values['other_users_are_using_the_same_peripheral_and_are_having_the_same_problem'],
+                values['does_not_maintain_data_security_and_protection'],
             ],
         }
         for key, value in priorities.items():
             if any(value):
-                self.priority = key
-                break
+                values['priority'] = key
+                return values

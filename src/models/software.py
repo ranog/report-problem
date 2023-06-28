@@ -32,29 +32,30 @@ class Software(BasePayload):
             values.get('other_users_are_having_the_same_problem'),
         ]
         if any(form_has_been_completed):
-            return values
+            return cls._select_priority(values)
         raise ValueError('Form has not been filled out')
 
-    def select_priority(self):
+    @classmethod
+    def _select_priority(cls, values):
         priorities = {
             Priority.HIGH: [
-                self.it_is_not_installed_correctly,
-                self.run_with_errors,
-                self.does_not_respond_to_commands_and_interactions,
+                values['it_is_not_installed_correctly'],
+                values['run_with_errors'],
+                values['does_not_respond_to_commands_and_interactions'],
             ],
             Priority.MEDIUM: [
-                self.not_displaying_data_and_content_correctly,
-                self.generates_unexpected_results,
-                self.not_integrating_with_other_systems_or_devices,
+                values['not_displaying_data_and_content_correctly'],
+                values['generates_unexpected_results'],
+                values['not_integrating_with_other_systems_or_devices'],
             ],
             Priority.LOW: [
-                self.not_using_required_system_resources,
-                self.not_maintaining_security_and_not_protecting_data,
-                self.it_is_not_updated_with_the_latest_versions,
-                self.other_users_are_having_the_same_problem,
+                values['not_using_required_system_resources'],
+                values['not_maintaining_security_and_not_protecting_data'],
+                values['it_is_not_updated_with_the_latest_versions'],
+                values['other_users_are_having_the_same_problem'],
             ],
         }
         for key, value in priorities.items():
             if any(value):
-                self.priority = key
-                break
+                values['priority'] = key
+                return values

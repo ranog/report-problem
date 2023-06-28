@@ -27,19 +27,16 @@ async def root():
 
 @app.post('/v1/report-notebook-issue/')
 async def report_notebook_issue(notebook: Notebook):
-    notebook.select_priority()
     return await IssueRepository().add(notebook)
 
 
 @app.post('/v1/report-software-issue/')
 async def report_software_issue(software: Software):
-    software.select_priority()
     return await IssueRepository().add(software)
 
 
 @app.post('/v1/report-peripheral-issue/')
 async def report_peripheral_issue(peripheral: Peripheral):
-    peripheral.select_priority()
     return await IssueRepository().add(peripheral)
 
 

@@ -103,9 +103,6 @@ async def test_it_should_return_list_of_issues_when_given_correct_parameters(cle
     software_problem_1 = Software(**payload_1)
     software_problem_2 = Software(**payload_2)
     software_problem_3 = Software(**payload_3)
-    software_problem_1.select_priority()
-    software_problem_2.select_priority()
-    software_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(software_problem_1)
@@ -199,9 +196,6 @@ async def test_it_should_return_items_from_the_given_category(clean_collection):
     notebook_problem_1 = Notebook(**payload_1)
     software_problem_2 = Software(**payload_2)
     software_problem_3 = Software(**payload_3)
-    notebook_problem_1.select_priority()
-    software_problem_2.select_priority()
-    software_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(notebook_problem_1)
@@ -274,9 +268,6 @@ async def test_it_should_return_items_of_given_priority(clean_collection):
     notebook_problem_1 = Notebook(**payload_1)
     software_problem_2 = Software(**payload_2)
     peripheral_problem_3 = Peripheral(**payload_3)
-    notebook_problem_1.select_priority()
-    software_problem_2.select_priority()
-    peripheral_problem_3.select_priority()
 
     repository = IssueRepository()
     await repository.add(notebook_problem_1)

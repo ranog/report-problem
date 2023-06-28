@@ -29,28 +29,29 @@ class Notebook(BasePayload):
             values.get('operating_system_does_not_start_correctly'),
         ]
         if any(form_has_been_completed):
-            return values
+            return cls._select_priority(values)
         raise ValueError('Form has not been filled out')
 
-    def select_priority(self):
+    @classmethod
+    def _select_priority(cls, values):
         priorities = {
             Priority.HIGH: [
-                self.it_is_not_turning_on,
-                self.power_button_is_not_working,
-                self.screen_is_not_working,
+                values['it_is_not_turning_on'],
+                values['power_button_is_not_working'],
+                values['screen_is_not_working'],
             ],
             Priority.MEDIUM: [
-                self.keyboard_is_not_working,
-                self.touchpad_is_not_working,
-                self.not_connecting_to_the_internet,
+                values['keyboard_is_not_working'],
+                values['touchpad_is_not_working'],
+                values['not_connecting_to_the_internet'],
             ],
             Priority.LOW: [
-                self.displays_error_message,
-                self.does_not_recognize_peripherals,
-                self.operating_system_does_not_start_correctly,
+                values['displays_error_message'],
+                values['does_not_recognize_peripherals'],
+                values['operating_system_does_not_start_correctly'],
             ],
         }
         for key, value in priorities.items():
             if any(value):
-                self.priority = key
-                break
+                values['priority'] = key
+                return values
