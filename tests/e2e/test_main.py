@@ -246,7 +246,7 @@ async def test_it_should_successfully_update_the_fields_provided_in_items(
         'priority': Priority.LOW,
     }
 
-    response = await async_http_client.patch(f'/v1/update-issue/{issue_id}/', json=items)
+    response = await async_http_client.patch(f'/v1/issue/{issue_id}/', json=items)
     issue_get_response = await async_http_client.get(f'/v1/issue/{issue_id}/')
     issue = issue_get_response.json()
 
@@ -267,7 +267,7 @@ async def test_it_should_return_not_found_when_issue_id_is_not_valid(
         'priority': Priority.LOW,
     }
 
-    response = await async_http_client.patch('/v1/update-issue/dummy_id/', json=items)
+    response = await async_http_client.patch('/v1/issue/dummy_id/', json=items)
 
     assert response.status_code == 404
     assert response.json() == 'dummy_id not found.'
@@ -288,7 +288,7 @@ async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
         'dummy_field': 'dummy_value',
     }
 
-    response = await async_http_client.patch(f'/v1/update-issue/{issue_id}/', json=items)
+    response = await async_http_client.patch(f'/v1/issue/{issue_id}/', json=items)
 
     assert response.status_code == 400
     assert response.json() == 'dummy_field field not exist.'

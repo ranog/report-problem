@@ -50,7 +50,7 @@ async def get_issues(category: str = None, priority: str = None):
     return await IssueRepository().list(category=category, priority=priority)
 
 
-@app.patch('/v1/update-issue/{issue_id}/')
+@app.patch('/v1/issue/{issue_id}/')
 async def update_issue(issue_id: str, items: dict):
     repository = IssueRepository()
     issue_doc = await repository.get(issue_id)
