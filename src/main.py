@@ -9,9 +9,6 @@ from src.models.software import Software
 from src.repository import IssueRepository
 
 
-COLLECTION_NAME = 'testing-report-problem'
-
-
 app = FastAPI()
 
 
