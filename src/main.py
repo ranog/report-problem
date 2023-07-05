@@ -47,18 +47,6 @@ async def get_issues(category: str = None, priority: str = None):
     return await IssueRepository().list(category=category, priority=priority)
 
 
-@app.patch('/v1/issue/{issue_id}/')
-async def update_issue(issue_id: str, items: dict):
-    repository = IssueRepository()
-    issue_doc = await repository.get(issue_id)
-    if not issue_doc:
-        return JSONResponse(content=f'{issue_id} not found.', status_code=404)
-    for item in items.keys():
-        if item not in issue_doc:
-            return JSONResponse(content=f'{item} field not exist.', status_code=400)
-    return await repository.update(issue_id=issue_id, items=items)
-
-
 @app.get('/v1/payloads/{category}/')
 async def payload(category: str):
     match category:

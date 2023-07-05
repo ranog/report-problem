@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from src.models.base_payload import Category, Priority, Status
+from src.models.base_payload import Category, Priority
 from src.repository import COLLECTION_NAME
 
 
@@ -229,69 +229,6 @@ async def test_it_should_return_all_alerts_when_no_query_parameter_is_passed(
 
     assert response.status_code == 200
     assert len(response.json()) == 3
-
-
-async def test_it_should_successfully_update_the_fields_provided_in_items(
-    notebook_payload,
-    clean_collection,
-    async_http_client: AsyncClient,
-):
-    await clean_collection(COLLECTION_NAME)
-    notebook_payload['it_is_not_turning_on'] = True
-    issue_post_response = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
-    issue_id = issue_post_response.json()
-    items = {
-        'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS,
-        'priority': Priority.LOW,
-    }
-
-    response = await async_http_client.patch(f'/v1/issue/{issue_id}/', json=items)
-    issue_get_response = await async_http_client.get(f'/v1/issue/{issue_id}/')
-    issue = issue_get_response.json()
-
-    assert response.status_code == 200
-    assert issue['responsible_engineer'] == items['responsible_engineer']
-    assert issue['status'] == items['status']
-    assert issue['priority'] == items['priority']
-
-
-async def test_it_should_return_not_found_when_issue_id_is_not_valid(
-    clean_collection,
-    async_http_client: AsyncClient,
-):
-    await clean_collection(COLLECTION_NAME)
-    items = {
-        'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS,
-        'priority': Priority.LOW,
-    }
-
-    response = await async_http_client.patch('/v1/issue/dummy_id/', json=items)
-
-    assert response.status_code == 404
-    assert response.json() == 'dummy_id not found.'
-
-
-async def test_it_should_return_bad_resquest_when_issue_id_is_not_valid(
-    notebook_payload,
-    clean_collection,
-    async_http_client: AsyncClient,
-):
-    await clean_collection(COLLECTION_NAME)
-    notebook_payload['it_is_not_turning_on'] = True
-    issue_doc = await async_http_client.post('/v1/report-notebook-issue/', json=notebook_payload)
-    issue_id = issue_doc.json()
-    items = {
-        'responsible_engineer': 'email@updated.com',
-        'status': Status.IN_PROGRESS.value,
-        'dummy_field': 'dummy_value',
-    }
-
-    response = await async_http_client.patch(f'/v1/issue/{issue_id}/', json=items)
-
-    assert response.status_code == 400
-    assert response.json() == 'dummy_field field not exist.'
 
 
 async def test_it_should_return_bad_request_when_no_question_is_answered_for_the_notebook_issue(
