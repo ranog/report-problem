@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from src.models.base_payload import Category
-from src.models.notebook import Notebook
-from src.models.peripheral import Peripheral
-from src.models.software import Software
 from src.repository import IssueRepository
+from src.v1.models.base_payload import Category
+from src.v1.models.notebook import Notebook
+from src.v1.models.peripheral import Peripheral
+from src.v1.models.software import Software
 
 
 app = FastAPI()

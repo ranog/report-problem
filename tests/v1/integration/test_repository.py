@@ -3,11 +3,11 @@ import os
 import pytest
 from google.api_core.exceptions import NotFound
 
-from src.models.base_payload import Category, Priority, Status
-from src.models.notebook import Notebook
-from src.models.peripheral import Peripheral
-from src.models.software import Software
 from src.repository import COLLECTION_NAME, IssueRepository
+from src.v1.models.base_payload import Category, Priority, Status
+from src.v1.models.notebook import Notebook
+from src.v1.models.peripheral import Peripheral
+from src.v1.models.software import Software
 
 
 async def test_it_should_persist_in_the_repository(clean_collection, notebook_payload):

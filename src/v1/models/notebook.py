@@ -1,6 +1,6 @@
 from pydantic import root_validator
 
-from src.models.base_payload import BasePayload, Category, Priority
+from src.v1.models.base_payload import BasePayload, Category, Priority
 
 
 class Notebook(BasePayload):

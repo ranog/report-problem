@@ -1,8 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
-from src.models.base_payload import Category, Priority
 from src.repository import COLLECTION_NAME
+from src.v1.models.base_payload import Category, Priority
 
 
 async def test_it_should_ping_successfully(async_http_client: AsyncClient):

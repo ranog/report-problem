@@ -1,5 +1,5 @@
-from src.models.base_payload import Priority
-from src.models.software import Software
+from src.v1.models.base_payload import Priority
+from src.v1.models.software import Software
 
 
 def test_it_should_return_high_priority_when_not_properly_installed(software_payload):
