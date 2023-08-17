@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 
 
 @dataclass
@@ -16,15 +17,21 @@ class Engineer:
     email: str
 
 
+class Status(str, Enum):
+    TO_DO = 'todo'
+    IN_PROGRESS = 'in progress'
+    DONE = 'done'
+
+
 class Issue:
     user: User
     description: str
     priority: str
     created_at: str
-    status: str
+    status: Status
     responsible_collaborator: str
 
-    def __init__(self, user, description, priority, created_at, status, responsible_collaborator):
+    def __init__(self, user, description, priority, created_at, responsible_collaborator, status=Status.TO_DO):
         self.user = user
         self.description = description
         self.priority = priority
@@ -34,3 +41,6 @@ class Issue:
 
     def assign(self, engineer: Engineer):
         self.responsible_collaborator = engineer.email
+
+    def change_status(self, status: Status):
+        self.status = status
