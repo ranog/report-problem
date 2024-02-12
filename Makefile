@@ -38,7 +38,7 @@ blue-check:
 	@poetry run blue -v --check .
 
 .PHONY: format
-format: blue ruff
+format: ruff blue
 
 .PHONY: lint
 lint: ruff-check flake8 blue-check
