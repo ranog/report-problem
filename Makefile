@@ -17,13 +17,13 @@ poetry-export:
 lock-deps:
 	@poetry lock -vv --no-ansi --no-interaction
 
-.PHONY: isort
-isort:
-	@poetry run isort --sp pyproject.toml .
+.PHONY: ruff
+ruff:
+	@poetry run ruff check . --fix
 
-.PHONY: isort-check
-isort-check:
-	@poetry run isort --check --sp pyproject.toml .
+.PHONY: ruff-check
+ruff-check:
+	@poetry run ruff check .
 
 .PHONY: flake8
 flake8:
@@ -38,10 +38,10 @@ blue-check:
 	@poetry run blue -v --check .
 
 .PHONY: format
-format: blue isort
+format: blue ruff
 
 .PHONY: lint
-lint: isort-check flake8 blue-check
+lint: ruff-check flake8 blue-check
 
 run:
 	@poetry install
