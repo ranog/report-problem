@@ -19,7 +19,7 @@ lock-deps:
 
 .PHONY: ruff
 ruff:
-	@poetry run ruff check . --fix
+	@poetry run ruff format .
 
 .PHONY: ruff-check
 ruff-check:
