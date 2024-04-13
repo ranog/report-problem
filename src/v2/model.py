@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum
+from dataclasses import dataclass
 
 
 @dataclass
@@ -23,24 +24,29 @@ class Status(str, Enum):
     DONE = 'done'
 
 
+class Priority(str, Enum):
+    LOW = 'low'
+    MEDIUM = 'medium'
+    HIGH = 'high'
+
+
 class Issue:
     user: User
     description: str
-    priority: str
-    created_at: str
-    status: Status
-    responsible_collaborator: str
+    priority: Priority
+    status: Status = Status.TO_DO
+    responsible_collaborator: Engineer
+    created_at: datetime = datetime.now(timezone.utc)
 
-    def __init__(self, user, description, priority, created_at, responsible_collaborator, status=Status.TO_DO):
+    def __init__(self, user, description):
         self.user = user
         self.description = description
-        self.priority = priority
-        self.created_at = created_at
-        self.status = status
-        self.responsible_collaborator = responsible_collaborator
 
     def assign(self, engineer: Engineer):
-        self.responsible_collaborator = engineer.email
+        self.responsible_collaborator = engineer
 
     def change_status(self, status: Status):
         self.status = status
+
+    def change_priority(self, priority: Priority):
+        self.priority = priority
